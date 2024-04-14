@@ -2,7 +2,7 @@
 
 def knapsack(profit, weight, capacity, n):
     """
-    Returns the maximum capacityue that can be put in a knapsack of capacity W.
+    Returns the maximum value that can be put in a knapsack of capacity W.
     
     profit = [60, 100, 120] 
     weight = [10, 20, 30] 
