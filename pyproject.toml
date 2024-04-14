@@ -1,0 +1,38 @@
+[project]
+name = "FastSnake"
+dynamic = ["version"]
+description = "A helper for contests in Python 3"
+authors = [
+    { name = "Jean Loui Bernard Silva de Jesus", email = "jeanextreme002@gmail.com" },
+]
+license = "MIT"
+readme = "README.md"
+keywords = [
+    "contest", "codeforces", "algorithms"
+]
+
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Intended Audience :: Developers"
+]
+exclude = ["tests", ".flake8"]
+requires-python = ">=3.6"
+dependencies = []
+
+[project.optional-dependencies]
+tests = [
+  "pytest",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/JeanExtreme002/FastSnake"
+
+[tool.hatch.version]
+path = "fastsnake/__init__.py"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+fastsnake = "fastsnake.application:main"
