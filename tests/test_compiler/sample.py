@@ -1,4 +1,6 @@
-import sys
+import sys, os
+
+os.chdir(sys.argv[1])
 
 from fastsnake.algorithms.binary_search import *
 
