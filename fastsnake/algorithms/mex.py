@@ -1,5 +1,3 @@
-
-# Function to find the MEX of the array
 def mex(array):
     # Create a dictionary to store the frequency of each element
     freq_map = {}
@@ -18,5 +16,3 @@ def mex(array):
 
     # Return MEX as the answer
     return mex_val
-
-

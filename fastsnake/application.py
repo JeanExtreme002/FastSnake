@@ -4,6 +4,10 @@ from fastsnake.util.compiler import compile_code
 import fastsnake
 import sys
 
+import os
+
+path = os.path.dirname(__file__)
+
 
 def load_codeforces_problem(contest_id, problem):
     """
@@ -24,7 +28,8 @@ def main():
     if sys.argv[1] in ["help", "-h", "--help"]:
         print("- compile [filename.py] : Compile a python solution that uses fastsnake")
         print("- codeforces load | -cl [contest_id] [problem_letter] : Download test cases from codeforces")
-        print("- help | --help | -h : Print the CLI commands")
+        print("- list [algorithms | structures] : List algorithm or structure modules")
+        print("- help | --help | -h : List the CLI commands")
         print("- version | --version | -v : Print the version of fastsnake")
 
     if sys.argv[1] == "compile":
@@ -32,6 +37,12 @@ def main():
 
     elif sys.argv[1] in ["version", "--version", "-v"]:
         print(fastsnake.__version__)
+
+    elif sys.argv[1] == "list":
+        if sys.argv[2] == "algorithms":
+            for name in os.listdir(os.path.join(path, "algorithms")):
+                if "__" not in name:
+                    print(f"- {name.replace('.py','').replace('_', ' ').title()}")
 
     elif sys.argv[1] == "codeforces" or sys.argv[1].startswith("-c"):
         if sys.argv[1].startswith("-c"):

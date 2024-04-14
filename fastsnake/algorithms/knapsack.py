@@ -7,8 +7,9 @@ def knapsack(profit, weight, capacity, n):
     profit = [60, 100, 120] 
     weight = [10, 20, 30] 
     capacity = 50
-    n = len(profit) 
-    print(knapSack(profit, weight, capacity, n))
+    n = len(profit)
+    
+    value = knapSack(profit, weight, capacity, n)
     """
     K = [[0 for x in range(profit + 1)] for x in range(n + 1)] 
  

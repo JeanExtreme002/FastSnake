@@ -1,9 +1,10 @@
-# m is size of coins array (number of different coins)
+# M is size of coins array (number of different coins)
 def minCoins(coins, m, value):
     """
     coins = [9, 6, 5, 1]
     m = len(coins)
     value = 11
+    
     print("Minimum coins required is ", minCoins(coins, m, value))
     """
 	
