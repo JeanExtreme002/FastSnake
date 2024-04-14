@@ -1,6 +1,6 @@
 def binary_search(array, x):
     low = 0
-    high = len(arr) - 1
+    high = len(array) - 1
     mid = 0
 
     while low <= high:

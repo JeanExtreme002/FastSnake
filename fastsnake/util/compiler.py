@@ -1,6 +1,6 @@
 import os
 
-path = os.path.dirname(__file__)
+path = os.path.join(os.path.dirname(__file__), "..")
 
 
 def compile_code(input_filename, output_filename):

@@ -1,12 +1,17 @@
-# M is size of coins array (number of different coins)
-def minCoins(coins, m, value):
+# Problema do número mínimo de moedas
+# Tempo: O(n * value)
+# Espaço: O(value)
+
+# N is size of coins array (number of different coins)
+def min_coins(coins, value, n = None):
     """
     coins = [9, 6, 5, 1]
-    m = len(coins)
     value = 11
+    n = len(coins)
     
-    print("Minimum coins required is ", minCoins(coins, m, value))
+    print("Minimum coins required is ", min_coins(coins, value, n))
     """
+    if n is None: n = len(coins)
 	
     # table[i] will be storing the minimum 
     # number of coins required for i value. 
@@ -25,7 +30,7 @@ def minCoins(coins, m, value):
     for i in range(1, value + 1):
             
         # Go through all coins smaller than i
-        for j in range(m):
+        for j in range(n):
             if (coins[j] <= i):
                 sub_res = table[i - coins[j]]
                 
