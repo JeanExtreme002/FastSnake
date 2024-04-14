@@ -16,6 +16,6 @@ def test_compiler():
 
     command = "python" if "win" in sys.platform else "python3"
 
-    assert os.system(f"{command} {filename} {base_dir}") == 1
+    assert os.system(f"{command} {filename} {base_dir}") in [1, 256]
     assert os.system(f"{command} {file.name} {base_dir}") == 0
 
