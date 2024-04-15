@@ -35,4 +35,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-fastsnake = "fastsnake.application:main"
+fastsnake = "fastsnake.application.application:main"
