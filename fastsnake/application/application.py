@@ -27,7 +27,7 @@ def run_test(problem):
 
     test_case = 0
     
-    for filename in os.listdir(config["namespace"]):
+    for filename in os.listdir(config["test_cases_namespace"]):
         
         # Check if the file is an input for the problem.
         if not filename.endswith(".in"): 
@@ -37,13 +37,15 @@ def run_test(problem):
             continue
 
         # Get the absolute path for the input file.
-        input_filename = os.path.abspath(os.path.join(config["namespace"], filename))
+        input_filename = os.path.abspath(os.path.join(config["test_cases_namespace"], filename))
 
         # Copy the module, injecting a code for loading input data.
         inject = f"import sys\nsys.stdin = open(r'{input_filename}', 'r')\n\n"
 
-        with open(config["module"]) as file:
-            code = file.read()
+        module = os.path.join(config["solutions_namespace"], problem.upper() + ".py")
+
+        with open(module) as module:
+            code = module.read()
 
         with NamedTemporaryFile("w", delete=False) as module:
             module.write(inject + code)
@@ -58,7 +60,7 @@ def run_test(problem):
         error = error.decode("utf-8")
 
         # Load the expected output.
-        output_filename = os.path.abspath(os.path.join(config["namespace"], filename[:-2] + "out"))
+        output_filename = os.path.abspath(os.path.join(config["test_cases_namespace"], filename[:-2] + "out"))
 
         with open(output_filename) as file:
             output = file.read().strip().replace("\r", "").rstrip("\n")
@@ -115,26 +117,39 @@ def load_codeforces_problems(contest_id, directory):
     return problems
 
 
-def start_contest(module, namespace, contest_id, problems: list[str]):
+def start_contest(test_cases_namespace, solutions_namespace, contest_id, problems: list[str]):
     config = {
-        "namespace": namespace,
-        "module": module,
+        "test_cases_namespace": test_cases_namespace,
+        "solutions_namespace": solutions_namespace,
         "contest_id": contest_id,
         "problems": problems
     }
+
+    if not os.path.exists(config["solutions_namespace"]):
+        os.mkdir(config["solutions_namespace"])
+
+    for filename in os.listdir(config["solutions_namespace"]):
+        os.remove(os.path.join(config["solutions_namespace"], filename))
+
+    for problem in config["problems"]:
+        with open(os.path.join(config["solutions_namespace"], problem.upper() + ".py"), "w") as file:
+            file.write("# Solution for problem " + problem + "\n\n")
 
     with open("contest.json", "w") as file:
         file.write(json.dumps(config))
 
 
-def start_codeforces_contest(contest_id, module):
+def start_codeforces_contest(contest_id):
     """
     Initialize a Codeforces contest.
     """
     directory = "codeforces"
 
+    test_cases = directory + "_test_cases"
+    solutions = directory + "_solutions" 
+
     problems = load_codeforces_problems(contest_id, directory)
-    start_contest(module, directory, contest_id, problems)
+    start_contest(test_cases, solutions, contest_id, problems)
 
 
 def main():
@@ -166,6 +181,4 @@ def main():
                 load_codeforces_problems(args.load_all, args.save)
 
             elif args.start_contest:
-                if not args.module.endswith(".py"):
-                    args.module += ".py"
-                start_codeforces_contest(args.start_contest, args.module)
+                start_codeforces_contest(args.start_contest)

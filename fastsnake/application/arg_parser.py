@@ -17,4 +17,3 @@ codeforces_parser.add_argument("--load-all", metavar="contest_id", type=int, des
 codeforces_parser.add_argument("--load", metavar=("contest_id", "problem"), type=str, nargs=2, dest="load", help="Download test cases from a problem")
 codeforces_parser.add_argument("--save", metavar="directory", type=str, default="codeforces", dest="save", help="Directory for saving downloaded files")
 codeforces_parser.add_argument("--start-contest", metavar="contest_id", type=int, dest="start_contest", help="Initialize a Codeforces contest")
-codeforces_parser.add_argument("--module", metavar="filename", type=str, dest="module", default="main.py", help="Module name to run solution of a problem")
