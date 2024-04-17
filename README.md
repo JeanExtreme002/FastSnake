@@ -10,7 +10,6 @@ Tired of having to copy-paste your library code into every solution you write? F
 This project provides useful CLI tools for competitive programming, such as algorithms and data structures, and tools for Codeforces. But you will have to write your own code and library for the problems you want to solve.
 
 ## Installing FastSnake:
-**For Python with pip:**
 ```
 $ pip install FastSnake
 ```
