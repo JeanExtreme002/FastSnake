@@ -2,7 +2,7 @@ from fastsnake.util.codeforces import *
 import os
 
 def test_get_problems():
-    problems = get_contest_problems(1949)
+    problems = get_problems(1949)
     assert "".join(problems) == "ABCDEFGHIJK"
 
 
@@ -12,7 +12,7 @@ def test_load_problem_test_cases():
     n_input = len([x for x in os.listdir(folder) if x.endswith(".in")])
     n_output = len([x for x in os.listdir(folder) if x.endswith(".out")])
 
-    inputs, outputs = get_contest_problem_test_cases(1949, "J")
+    inputs, outputs = get_problem_test_cases(1949, "J")
 
     assert len(inputs) == n_input and len(outputs) == n_output
 

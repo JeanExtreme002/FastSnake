@@ -4,6 +4,7 @@ from typing import List, Tuple
 import os
 import requests
 
+
 headers = {
     "Sec-Ch-Ua": "\"Google Chrome\";v=\"123\", \"Not:A-Brand\";v=\"8\", \"Chromium\";v=\"123\"",
     "Sec-Ch-Ua-Arch": "\"x86\"",
@@ -19,15 +20,22 @@ headers = {
 }
 
 
-def get_contest_problems(contest_id: int) -> List[str]:
-    url = f"https://codeforces.com/contest/{contest_id}"
+def get_problems(id_: int, namespace: str = "contest") -> List[str]:
+    url = f"https://codeforces.com/{namespace}/{id_}"
 
     response = requests.get(url, headers=headers)
+
+    if response.status_code >= 300:
+        raise ValueError(f"{namespace.capitalize()} not found")
+
     problems = []
 
     soup = BeautifulSoup(response.content, "html.parser")
 
     table = soup.find("table", class_="problems")
+
+    if not table:
+        raise ValueError(f"{namespace.capitalize()} not found")
 
     for problem in table.find_all("tr")[1:]:
 
@@ -39,22 +47,35 @@ def get_contest_problems(contest_id: int) -> List[str]:
     return problems
 
 
-def get_contest_problem_test_cases(contest_id: int, problem: str) -> Tuple[List[str], List[str]]:
-    url = f"https://codeforces.com/contest/{contest_id}/problem/{problem}"
+def get_problem_test_cases(id_: int, problem: str, namespace: str = "contest") -> Tuple[List[str], List[str]]:
+    url = f"https://codeforces.com/{namespace}/{id_}/problem/{problem}"
 
     response = requests.get(url, headers=headers)
     inputs, outputs = [], []
+
+    if response.status_code >= 300:
+        raise ValueError(f"{namespace.capitalize()} problem not found")
     
     soup = BeautifulSoup(response.content, "html.parser")
 
     for input_data in soup.find_all("div", class_="input"):        
         pre = input_data.find("pre")
 
-        string = "\n".join(data.text for data in pre.find_all("div"))
+        if not pre: continue
+        
+        divs = pre.find_all("div")
+
+        if divs:
+            string = "\n".join(data.text for data in divs)
+        else: 
+            string = pre.text
+
         inputs.append(string)
 
     for output_data in soup.find_all("div", class_="output"):
         pre = output_data.find("pre")
-        outputs.append(pre.text)
+        
+        if pre:
+            outputs.append(pre.text)
 
     return inputs, outputs
