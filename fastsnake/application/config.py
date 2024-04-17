@@ -1,0 +1,1 @@
+contest_config_filename = "contest.json"

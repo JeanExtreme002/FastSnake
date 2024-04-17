@@ -10,6 +10,7 @@ main_parser.add_argument("-t", "--test", metavar="problem", type=str, help="Test
 main_parser.add_argument("-tc", metavar="problem", type=str, dest="test_and_compile", help="Test and compile the solution for a problem of the contest")
 main_parser.add_argument("-l", "--list", type=str, choices=["algorithms", "structures"], help="List algorithm or structure modules")
 main_parser.add_argument("-v", "--version", action="store_true", help="Print the fastsnake's version")
+main_parser.add_argument("-g", "--generate-tests", action="store_true", help="Use generator module to test the solution of a problem.")
 
 contest_parser = main_parser.add_subparsers(title="Contest Platforms", dest="contest")
 
