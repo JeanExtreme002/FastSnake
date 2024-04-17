@@ -35,7 +35,6 @@ FastSnake provides some algorithms and structures that can be injected to your f
 ```py
 from fastsnake.algorithms.min_coins import *
 
-n = int(input())
 coins = []
 
 for x in input().split():
@@ -43,7 +42,8 @@ for x in input().split():
 
 value = int(input())
 
-print(min_coins(coins, value))  # Result
+result = min_coins(coins, value)
+print(result)
 ```
 Use the argument `--list <algorithms | structures>` to see all algorithms and structures provided by FastSnake.
 
