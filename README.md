@@ -24,7 +24,12 @@ $ fastsnake codeforces -sc <contest_id>
 
 Once you have written your solution, test it.
 ```
-$ fastsnake -t <problem>
+$ fastsnake test <problem>
+```
+
+You can also create your own generator, at `test_generators` folder, to bruteforce your solution.
+```
+$ fastsnake test <problem> -g <n_tests>
 ```
 
 ### Algorithms and Structures
@@ -49,7 +54,7 @@ Use the argument `--list <algorithms | structures>` to see all algorithms and st
 
 **Injecting the algorithm to the final solution...**
 ```
-$ fastsnake -c main.py
+$ fastsnake compile main.py
 ```
 Check out the code of the generated Python module.
 <br>
@@ -57,6 +62,6 @@ Check out the code of the generated Python module.
 ### Testing and Compiling:
 You may test and compile your solution using the command below:
 ```
-$ fastsnake -tc <problem>
+$ fastsnake test <problem> -c
 ```
 If the solution was accepted at all test cases, it will be compiled.
