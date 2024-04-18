@@ -19,7 +19,7 @@ def input_float_matrix(n_rows: int, separator: Optional[str] = None) -> List[Lis
     """
     Return an float matrix from input.
     """
-    return [float(x) for x in input().split(separator) for _ in range(n_rows)]
+    return [[float(x) for x in input().split(separator)] for _ in range(n_rows)]
 
 
 def input_int() -> int:
