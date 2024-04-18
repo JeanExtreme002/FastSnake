@@ -57,7 +57,7 @@ def start_contest(
             file.write("def gen_string_array(size: int, start: int, end: int, letters: str = string.ascii_lowercase):\n")
             file.write("    return ' '.join(gen_string(gen_int(start, end), letters) for _ in range(size))\n")
             file.write("\n\n")
-            file.write("def generate() -> \"Generator\":  # Yield any data type (it will be converted to str later)\n")
+            file.write("def generate(test_id: int) -> \"Generator\":  # Yield any data type (it will be converted to str later)\n")
             file.write("    # Sample code ...\n")
             file.write("    yield gen_int(0, 100)\n")
             file.write("    yield gen_int_array(10, 0, 100)\n")

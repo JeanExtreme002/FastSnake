@@ -1,7 +1,7 @@
 from fastsnake.application.arg_parser import main_parser
 from fastsnake.application.config import contest_config_filename
 from fastsnake.application.contest import start_contest
-from fastsnake.application.test_runner import run_test, run_test_generator
+from fastsnake.application.runner import run_test, run_test_generator
 from fastsnake.util.codeforces import *
 from fastsnake.util.compiler import compile_code
 

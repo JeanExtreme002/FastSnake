@@ -104,8 +104,8 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
     generator = importlib.import_module(f"generator_{problem}")
 
     # Run the tests.
-    for t in range(tests):
-        input_data = [str(line) for line in generator.generate()]
+    for test_id in range(tests):
+        input_data = [str(line) for line in generator.generate(test_id)]
 
         # Create an input file.
         with NamedTemporaryFile("w", delete=False) as input_file:
@@ -147,7 +147,7 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
 
         # Check the output.
         if not check:
-            print(f"Failed at the generated test case!!")
+            print(f"Failed at the generated test case #{test_id}!!")
             print("[Input]:")
             print("\n".join(input_data))
             print("=" * 40)

@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Any, Optional, Tuple
 
 
 class BTreeNode:
@@ -15,27 +15,28 @@ class BTree:
 	B = BTree(3)
 	
 	for i in range(10):
-		B.insert((i, 2*i))
+		B.insert((i, 2*i))  # Insert (key, value [any data type])
 		
-	B.print_tree(B.root)
-	print("\n")
+	B.print_tree(B.root, "\n")
 	
 	B.delete((3,), B.root)
 	
-	if B.search(5) != None:
-		(x, i) = B.search(5)
+	result = B.search(5)
+
+	if result is not None:
+		parent_node, index = result
+		print("Found!")
 	else:
-		print("Element not found!")
-		
-	print("\n")
-	B.print_tree(B.root)
+		print("Not found!")
+
+	B.print_tree("\n", B.root)
 	"""
 	def __init__(self, minimum_degree: int):
 		"""
-		:param minimum_degree: Order of B Tree
+		:param minimum_degree: Order of B Tree (must be greater than or equal to 2)
 		"""
 		self.root = BTreeNode(True)
-		self.t = minimum_degree
+		self.t = max(2, minimum_degree)
 
 	def print_tree(self, node: Optional[BTreeNode] = None, l = 0) -> None:
 		"""
@@ -59,7 +60,7 @@ class BTree:
 				self.print_tree(i, l)
 	
 
-	def search(self, key, position: Optional[BTreeNode] = None) -> Optional[Tuple[BTreeNode, int]]:
+	def search(self, key: int, position: Optional[BTreeNode] = None) -> Optional[Tuple[BTreeNode, int]]:
 		"""
 		Search for a key at a position.
         
@@ -80,7 +81,7 @@ class BTree:
 				i += 1
 			if i < len(x.keys) and k == x.keys[i][0]:
 				return (x, i)
-			elif x.leaf:
+			elif x.leaf or i >= len(x.child):
 				return None
 			else:
 				#Search in children
@@ -89,7 +90,7 @@ class BTree:
 			#Search entire tree as node not provided
 			return self.search(k, self.root)
 
-	def insert(self, key: Tuple) -> None:
+	def insert(self, key: Tuple[int, Any]) -> None:
 		"""
 		Calls helper functions to insert a key in the B-Tree.
 		
@@ -162,7 +163,7 @@ class BTree:
 			z.child = y.child[t : 2 * t]
 			y.child = y.child[0 : t - 1]
 
-	def delete(self, key, position: Optional[BTreeNode] = None) -> None:
+	def delete(self, key: Tuple[int, Any], position: Optional[BTreeNode] = None) -> None:
 		"""
 		Calls helper functions to delete the key after searching from node 'position'
 
