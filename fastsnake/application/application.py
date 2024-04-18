@@ -1,7 +1,7 @@
 from fastsnake.application.arg_parser import main_parser
 from fastsnake.application.config import contest_config_filename
 from fastsnake.application.contest import start_contest
-from fastsnake.application.test_runner import run_test
+from fastsnake.application.test_runner import run_test, run_test_generator
 from fastsnake.util.codeforces import *
 from fastsnake.util.compiler import compile_code
 
@@ -14,32 +14,24 @@ project_path = os.path.join(os.path.dirname(__file__), "..")
 args = main_parser.parse_args()
 
 
-def compile(args) -> None:
+def compile(filename: str, problem: bool = False) -> None:
     """
     Compile a solution.
-    """
-    if args.test_and_compile:
-        args.compile = args.test_and_compile
-        
+    """        
     # If the provided filename does not contains PY extension, check if it is a contest problem.
-    if not args.compile.endswith(".py"):
-        if args.test or os.path.exists(contest_config_filename):
-            with open(contest_config_filename) as file:
-                config = json.load(file)
+    if not filename.endswith(".py") and problem:
+        with open(contest_config_filename) as file:
+            config = json.load(file)
                 
-            if args.compile:
-                args.compile = os.path.join(config["solutions_namespace"], args.compile + ".py")
-
-            elif args.test:
-                args.compile = os.path.join(config["solutions_namespace"], args.test + ".py")
+        filename = os.path.join(config["solutions_namespace"], filename + ".py")
 
     # Get the output filename and compile the solution.
-    base_name = os.path.basename(args.compile)
-    directory = os.path.dirname(args.compile)
+    base_name = os.path.basename(filename)
+    directory = os.path.dirname(filename)
 
     output_filename = os.path.join(directory, "compiled_" + base_name)
     
-    compile_code(args.compile, output_filename)
+    compile_code(filename, output_filename)
 
 
 def load_codeforces_problem(contest_id: int, problem: str, directory: str, namespace: str = "contest") -> None:
@@ -84,56 +76,69 @@ def start_codeforces_contest(contest_id: int) -> None:
     """
     Initialize a Codeforces contest.
     """
-    directory = "codeforces"
+    directory = "codeforces_contest"
 
-    test_cases = directory + "_contest_test_cases"
-    solutions = directory + "_contest_solutions"
+    solutions = os.path.join(directory, "solutions")
+    test_cases = os.path.join(directory, "test_cases")
+    test_generators = os.path.join(directory, "test_generators")
+
+    if not os.path.exists(directory):
+        os.mkdir(directory)
 
     problems = load_codeforces_problems(contest_id, test_cases)
-    start_contest(test_cases, solutions, contest_id, problems)
+    start_contest(solutions, test_cases, test_generators, contest_id, problems)
 
 
 def start_codeforces_gym(gym_id: int) -> None:
     """
     Initialize a Codeforces contest.
     """
-    directory = "codeforces"
+    directory = "codeforces_gym"
 
-    test_cases = directory + "_gym_test_cases"
-    solutions = directory + "_gym_solutions" 
+    solutions = os.path.join(directory, "solutions")
+    test_cases = os.path.join(directory, "test_cases")
+    test_generators = os.path.join(directory, "test_generators")
 
-    problems = load_codeforces_problems(gym_id, test_cases, "gym")
-    start_contest(test_cases, solutions, gym_id, problems)
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+
+    problems = load_codeforces_problems(gym_id, test_cases, namespace="gym")
+    start_contest(solutions, test_cases, test_generators, gym_id, problems)
 
 
 def main() -> None:
     """
     Main function.
     """
-    # Compile a fastsnake solution.
-    if args.compile:
-        compile(args)
-
     # Print the version of the project.
-    elif args.version:
+    if args.version:
         print(fastsnake.__version__)
 
     # List algorithms and structures.
     elif args.list:
         for name in os.listdir(os.path.join(project_path, args.list)):
             if "__" not in name:
-                print(f"- {name.replace('.py','').replace('_', ' ').title()}")
+                print(f"- {name.replace('.py', '').replace('_', ' ').title()}")
 
-    # Test the solution.
-    elif args.test or args.test_and_compile:
-        result = run_test(args.test if args.test else args.test_and_compile)
+    # CLI Commands.
+    elif args.command:
 
-        if result and args.test_and_compile: 
-            compile(args)
+        # Test the solution.
+        if args.command == "test":
+            if args.generator:
+                result = run_test_generator(args.problem, args.generator)
+            else:
+                result = run_test(args.problem)
 
-    # Tools for Codeforces.
-    elif args.contest:
-        if args.contest == "codeforces":
+            if result and args.test_and_compile: 
+                compile(args.problem)
+        
+        # Compile a fastsnake solution.
+        elif args.command == "compile":
+            compile(args.filename)
+
+        # Tools for Codeforces.
+        elif args.command == "codeforces":
             if args.load:
                 try: 
                     contest_id, problem = int(args.load[0]), args.load[1]
@@ -150,7 +155,7 @@ def main() -> None:
 
             elif args.start_gym:
                 start_codeforces_gym(args.start_gym)
-
+                
 
 if __name__ == "__main__":
     main()

@@ -50,7 +50,7 @@ def run_test(problem: str) -> bool:
             [command, module.name], 
             stdout=subprocess.PIPE, 
             stderr=subprocess.PIPE, 
-            shell=True,
+            shell=False,
         )
         result, error = process.communicate()
 
@@ -65,10 +65,17 @@ def run_test(problem: str) -> bool:
 
         # Compare the outputs.
         if output != result:
+            with open(input_filename) as file:
+                input_data = file.read()
+
             print(f"Failed at test case #{test_case}!!")
-            print("Your Output:")
+            print("[Input]:")
+            print(input_data)
+            print("=" * 40)
+            print("[Your Output]:")
             print(error if error and not result else result)
-            print("Expected Output:")
+            print("=" * 40)
+            print("[Expected Output]:")
             print(output)
             return False
         
@@ -88,18 +95,23 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
     if not problem in config["problems"]:
         raise ValueError(f"Invalid problem ID: {problem}")
     
-    path = config["test_cases_namespace"] + "_generators"
+    # Import the generator module.
+    path = config["test_generators_namespace"]
 
     if path not in sys.path:
         sys.path.append(path)
 
     generator = importlib.import_module(f"generator_{problem}")
 
+    # Run the tests.
     for t in range(tests):
-        input_data = generator.generate()
+        input_data = ""
+        
+        for line in generator.generate():
+            input_data += str(line) + "\n"
 
         # Create an input file.
-        with NamedTemporaryFile(delete=False) as input_file:
+        with NamedTemporaryFile("w", delete=False) as input_file:
             input_file.write(input_data)
 
         # Get the absolute path for the input file.
@@ -123,20 +135,27 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
             [command, module.name], 
             stdout=subprocess.PIPE, 
             stderr=subprocess.PIPE, 
-            shell=True,
+            shell=False,
         )
         result, error = process.communicate()
 
         result = result.decode("utf-8").strip().rstrip("\n").replace("\r", "")
         error = error.decode("utf-8")
 
+        try:
+            check = generator.test_output(input_data, result)
+        except NotImplementedError:
+            print("ERROR: You must implement the generator() and test_ouput() at the generator module.")
+            return False
+
         # Check the output.
-        if not generator.test_output(result):
+        if not check:
             print(f"Failed at the generated test case!!")
-            print("Input:")
+            print("[Input]:")
             print(input_data)
-            print("Output:")
-            print(result)
+            print("=" * 40)
+            print("[Output]:")
+            print(result if result and not error else error)
             return False
         
     print(f"SUCCESS!! Your solution was accepted at all {tests} test cases.")
