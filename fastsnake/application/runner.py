@@ -147,7 +147,7 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
 
         # Check the output.
         if not check:
-            print(f"Failed at the generated test case #{test_id}!!")
+            print(f"Failed at the generated test #{test_id}!!")
             print("[Input]:")
             print("\n".join(input_data))
             print("=" * 40)
@@ -155,5 +155,5 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
             print(result if result and not error else error)
             return False
         
-    print(f"SUCCESS!! Your solution was accepted at all {tests} test cases.")
+    print(f"SUCCESS!! Your solution was accepted at all {tests} generated tests.")
     return True
