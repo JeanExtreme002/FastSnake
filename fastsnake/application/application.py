@@ -145,9 +145,15 @@ def main() -> None:
     """
     Main function.
     """
-    # Print the version of the project.
+    # Print the information of the project.
     if args.version:
         print(fastsnake.__version__)
+
+    elif args.author:
+        print(fastsnake.__author__)
+
+    elif args.credits:
+        print(fastsnake.__credits__)
 
     # List algorithms and structures.
     elif args.list:

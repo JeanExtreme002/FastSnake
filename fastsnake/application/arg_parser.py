@@ -5,6 +5,8 @@ main_parser = ArgumentParser(prog="FastSnake", description="CLI Tools for Compet
 
 main_parser.add_argument("-l", "--list", type=str, choices=["algorithms", "structures"], help="List algorithm or structure modules")
 main_parser.add_argument("-v", "--version", action="store_true", help="Print the fastsnake's version")
+main_parser.add_argument("--author", action="store_true", help="Print the author name")
+main_parser.add_argument("--credits", action="store_true", help="Print the credits of the project")
 
 command_parser = main_parser.add_subparsers(title="Fastsnake CLI Commands", dest="command")
 
