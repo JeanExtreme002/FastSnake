@@ -131,7 +131,7 @@ def main() -> None:
                 result = run_test(args.problem)
 
             if result and args.test_and_compile: 
-                compile(args.problem)
+                compile(args.problem, problem=True)
         
         # Compile a fastsnake solution.
         elif args.command == "compile":
