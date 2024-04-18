@@ -149,7 +149,7 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
         if not check:
             print(f"Failed at the generated test case!!")
             print("[Input]:")
-            print(input_data)
+            print("\n".join(input_data))
             print("=" * 40)
             print("[Output]:")
             print(result if result and not error else error)
