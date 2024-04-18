@@ -64,7 +64,7 @@ def start_contest(
             file.write("    yield gen_string(10, string.ascii_uppercase)\n")
             file.write("    yield gen_string_array(10, 1, 20, string.ascii_uppercase + string.ascii_lowercase)\n")
             file.write("\n\n")
-            file.write("def test_output(input_: str, output: str) -> bool:\n")
+            file.write("def test_output(input_: list[str], output: str) -> bool:\n")
             file.write("    raise NotImplementedError()")
             file.write("\n")
 

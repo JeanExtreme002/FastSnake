@@ -105,14 +105,11 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
 
     # Run the tests.
     for t in range(tests):
-        input_data = ""
-        
-        for line in generator.generate():
-            input_data += str(line) + "\n"
+        input_data = [str(line) for line in generator.generate()]
 
         # Create an input file.
         with NamedTemporaryFile("w", delete=False) as input_file:
-            input_file.write(input_data)
+            input_file.write("\n".join(input_data))
 
         # Get the absolute path for the input file.
         input_filename = os.path.abspath(input_file.name)
