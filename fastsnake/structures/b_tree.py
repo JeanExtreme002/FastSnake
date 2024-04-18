@@ -44,6 +44,8 @@ class BTree:
 		if node is None:
 			node = self.root
 
+		x = node
+
 		print("Level ", l, " ", len(x.keys), end = ":")
 		
 		for i in x.keys:
@@ -169,7 +171,7 @@ class BTree:
 		"""
 		if position is None:
 			position = self.root
-			
+
 		k = key
 		x = position
 		
