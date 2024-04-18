@@ -33,4 +33,4 @@ jobs:
         pytest tests -vv -s
     - name: Install package
       run: |
-        pip install FlightRadar24
+        pip install FastSnake
