@@ -109,7 +109,7 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
 
         # Create an input file.
         with NamedTemporaryFile("w", delete=False) as input_file:
-            input_file.write("\n".join(input_data))
+            input_file.write("\n".join(input_data) + "\n")
 
         # Get the absolute path for the input file.
         input_filename = os.path.abspath(input_file.name)

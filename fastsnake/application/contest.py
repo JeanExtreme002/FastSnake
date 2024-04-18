@@ -31,6 +31,18 @@ def start_contest(
     for problem in config["problems"]:
         with open(os.path.join(config["solutions_namespace"], problem.upper() + ".py"), "w") as file:
             file.write("# Solution for problem " + problem + "\n\n")
+            file.write("# from fastsnake.algorithms.something import *\n")
+            file.write("# from fastsnake.structures.something import *\n")
+            file.write("\n")
+            file.write("# from fastsnake.entries import *\n")
+            file.write("# inputi = input_int\n")
+            file.write("# inputa = input_int_array\n")
+            file.write("# inputm = input_int_matrix\n")
+            file.write("\n")
+            file.write("for test_case in range(int(input())):\n")
+            file.write("    n = int(input())\n")
+            file.write("    pass\n")
+            file.write("\n\n")
 
     # Create folder with Python modules for writting test case generators.
     if not os.path.exists(config["test_generators_namespace"]):

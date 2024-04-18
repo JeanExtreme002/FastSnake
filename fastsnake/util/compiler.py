@@ -6,11 +6,17 @@ path = os.path.join(os.path.dirname(__file__), "..")
 def compile_code(input_filename: str, output_filename: str) -> None:
     
     string = ""
+
+    valid_imports = [
+        "from fastsnake.algorithms",
+        "from fastsnake.structures",
+        "from fastsnake.entries"
+    ]
     
     with open(input_filename) as file:
         for line in file:
             # Check if the line contains an import statement for algorithms or structures.
-            if not line.startswith("from fastsnake.algorithms") and not line.startswith("from fastsnake.structures"):
+            if not any([line.startswith(x) for x in valid_imports]):
                 string += line
                 continue
 
