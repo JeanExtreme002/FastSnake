@@ -89,11 +89,11 @@ class BTree:
 			#Search entire tree as node not provided
 			return self.search(k, self.root)
 
-	def insert(self, key) -> None:
+	def insert(self, key: Tuple) -> None:
 		"""
 		Calls helper functions to insert a key in the B-Tree.
 		
-		:param key: Key to be inserted
+		:param key: Key to be inserted. It must be a tuple (key, value)
 		"""
 		k = key
 		root = self.root
@@ -162,7 +162,7 @@ class BTree:
 			z.child = y.child[t : 2 * t]
 			y.child = y.child[0 : t - 1]
 
-	def delete(self, key, position: Optional[BTreeNode]) -> None:
+	def delete(self, key, position: Optional[BTreeNode] = None) -> None:
 		"""
 		Calls helper functions to delete the key after searching from node 'position'
 
