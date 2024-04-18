@@ -1,14 +1,14 @@
 [project]
 name = "FastSnake"
 dynamic = ["version"]
-description = "A helper for contests in Python 3"
+description = "A Python Helper CLI for Competitive Programming"
 authors = [
     { name = "Jean Loui Bernard Silva de Jesus", email = "jeanextreme002@gmail.com" },
 ]
 license = "MIT"
 readme = "README.md"
 keywords = [
-    "contest", "codeforces", "algorithms"
+    "cli", "helper", "contest", "codeforces", "algorithms", "structures", "competitive programming", "competition", "marathon"
 ]
 
 classifiers = [

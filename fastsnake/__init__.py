@@ -1,6 +1,10 @@
+__doc__ = """
+A Python Helper CLI for Competitive Programming
+"""
+
 __author__ = "Jean Loui Bernard Silva de Jesus"
 __github__ = "https://github.com/JeanExtreme002"
-__version__ = "1.4.3"
+__version__ = "1.4.4"
 
 __credits__ = f"""
  Author: {__author__}
