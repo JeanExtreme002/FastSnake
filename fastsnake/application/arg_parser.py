@@ -18,6 +18,10 @@ test_parser.add_argument("-g", "--generator", type=int, metavar="n_tests", dest=
 compile_parser = command_parser.add_parser("compile", help="Compile a python fastsnake solution")
 compile_parser.add_argument("filename", type=str, help="Python module")
 
+# Custom Contest.
+custom_contest_parser = command_parser.add_parser("start-custom-contest", help="Start a custom contest")
+custom_contest_parser.add_argument("n_problems", type=int, help="Amount of problems")
+
 # Tools for Contest Platforms.
 codeforces_parser = command_parser.add_parser("codeforces", help="Tools for Codeforces platform")
 codeforces_parser.add_argument("--load-all", metavar="contest_id", type=int, dest="load_all", help="Download test cases from every problem of a contest")

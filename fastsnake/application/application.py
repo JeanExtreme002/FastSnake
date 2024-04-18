@@ -106,6 +106,41 @@ def start_codeforces_gym(gym_id: int) -> None:
     start_contest(solutions, test_cases, test_generators, gym_id, problems)
 
 
+def start_custom_contest(n_problems: int) -> None:
+    """
+    Initialize a custom contest.
+    """
+    directory = "custom_contest"
+    contest_id = "x"
+
+    solutions = os.path.join(directory, "solutions")
+    test_cases = os.path.join(directory, "test_cases")
+    test_generators = os.path.join(directory, "test_generators")
+
+    if not os.path.exists(directory):
+        os.mkdir(directory)
+
+    if not os.path.exists(test_cases):
+        os.mkdir(test_cases)
+
+    problems = [chr(ord("A")+i) for i in range(min(n_problems, 26))]
+
+    for problem in problems:
+        filename = f"contest_{contest_id}_problem_{problem}_0.in"
+        filename = os.path.join(test_cases, filename)
+
+        with open(filename, "w") as file:
+            file.write("\n")
+
+        filename = f"contest_{contest_id}_problem_{problem}_0.out"
+        filename = os.path.join(test_cases, filename)
+
+        with open(filename, "w") as file:
+            file.write("\n")
+
+    start_contest(solutions, test_cases, test_generators, contest_id, problems)
+
+
 def main() -> None:
     """
     Main function.
@@ -136,6 +171,11 @@ def main() -> None:
         # Compile a fastsnake solution.
         elif args.command == "compile":
             compile(args.filename)
+
+        # Start a custom contest.
+        elif args.command == "start-custom-contest":
+            start_custom_contest(args.n_problems)
+
 
         # Tools for Codeforces.
         elif args.command == "codeforces":
