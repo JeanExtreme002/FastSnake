@@ -17,7 +17,7 @@ def add_external_module(module, name: str, is_url: bool = False) -> None:
         if response.status_code >= 300:
             return print(f"Received a {response.status_code} status code from the server.")
         
-        content = response.text()
+        content = response.text
 
     else:
         with open(module) as file:
