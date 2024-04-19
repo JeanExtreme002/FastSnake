@@ -1,6 +1,9 @@
 from argparse import ArgumentParser
 
 
+__all__ = ["main_parser"]
+
+
 main_parser = ArgumentParser(prog="FastSnake", description="CLI Tools for Competitive Programming")
 
 main_parser.add_argument("-l", "--list", type=str, choices=["algorithms", "structures", "external"], help="List algorithm, structure or external modules")
@@ -33,6 +36,13 @@ add_external_contest_parser.add_argument("-u", "--url", action="store_true", des
 # Delete External Module.
 delete_external_contest_parser = command_parser.add_parser("delete-external", help="Delete an external module")
 delete_external_contest_parser.add_argument("module", type=str, help="External module name")
+
+# Tools for AtCoder Platforms.
+atcoder_parser = command_parser.add_parser("atcoder", help="Tools for Atcoder platform")
+atcoder_parser.add_argument("--load-all", metavar="contest_id", type=str, dest="load_all", help="Download test cases from every problem of a contest")
+atcoder_parser.add_argument("--load", metavar=("contest_id", "problem"), type=str, nargs=2, dest="load", help="Download test cases from a problem")
+atcoder_parser.add_argument("--save", metavar="directory", type=str, default="atcoder", dest="save", help="Directory for saving downloaded files")
+atcoder_parser.add_argument("-sc", "--start-contest", metavar="contest_id", type=str, dest="start_contest", help="Initialize a Codeforces contest")
 
 # Tools for Contest Platforms.
 codeforces_parser = command_parser.add_parser("codeforces", help="Tools for Codeforces platform")

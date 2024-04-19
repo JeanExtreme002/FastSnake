@@ -20,8 +20,8 @@ headers = {
 }
 
 
-def get_problems(id_: int, namespace: str = "contest") -> List[str]:
-    url = f"https://codeforces.com/{namespace}/{id_}"
+def get_problems(id_: str, namespace: str = "contests") -> List[str]:
+    url = f"https://atcoder.jp/{namespace}/{id_}/tasks"
 
     response = requests.get(url, headers=headers)
 
@@ -32,50 +32,48 @@ def get_problems(id_: int, namespace: str = "contest") -> List[str]:
 
     soup = BeautifulSoup(response.content, "html.parser")
 
-    table = soup.find("table", class_="problems")
+    table = soup.find("tbody")
 
     if not table:
         raise ValueError(f"{namespace.capitalize()} not found")
 
-    for problem in table.find_all("tr")[1:]:
-
+    for problem in table.find_all("tr"):
         problem = problem.find("td").find("a")
-        data = problem.text.strip().strip("\n")
+        data = problem.text.strip().strip("\n").strip("\r")
 
         problems.append(data)
 
     return problems
 
 
-def get_problem_test_cases(id_: int, problem: str, namespace: str = "contest") -> Tuple[List[str], List[str]]:
-    url = f"https://codeforces.com/{namespace}/{id_}/problem/{problem}"
+def get_problem_test_cases(id_: str, problem: str, namespace: str = "contests") -> Tuple[List[str], List[str]]:
+    url = f"https://atcoder.jp/{namespace}/{id_}/tasks/{id_}_{problem.lower()}"
 
     response = requests.get(url, headers=headers)
     inputs, outputs = [], []
 
     if response.status_code >= 300:
-        raise ValueError(f"{namespace.capitalize()} problem not found. Status Code: {response.status_code}")
+        raise ValueError(f"Problem {id_}_{problem.lower()} not found. Status Code: {response.status_code}")
     
     soup = BeautifulSoup(response.content, "html.parser")
+    contest = soup.find("div", {"id": "task-statement"})
 
-    for input_data in soup.find_all("div", class_="input"):        
-        pre = input_data.find("pre")
+    if not contest:
+        raise ValueError(f"Problem {id_}_{problem.lower()} not found.")
+    
+    contest = contest.find("span", class_="lang-en")
 
-        if not pre: continue
+    input_turn = True
+
+    for box in contest.find_all("div", class_="part"):        
+        if "sample" not in box.find("section").find("h3").text.lower():
+            continue
+
+        string = box.find("pre").text.replace("\r", "")
         
-        divs = pre.find_all("div")
-
-        if divs:
-            string = "\n".join(data.text for data in divs)
-        else: 
-            string = pre.text
-
-        inputs.append(string)
-
-    for output_data in soup.find_all("div", class_="output"):
-        pre = output_data.find("pre")
-        
-        if pre:
-            outputs.append(pre.text)
+        if input_turn: inputs.append(string)
+        else: outputs.append(string)
+            
+        input_turn = not input_turn
 
     return inputs, outputs

@@ -1,6 +1,7 @@
 from fastsnake.util.codeforces import *
 import os
 
+
 def test_get_problems():
     problems = get_problems(1949)
     assert "".join(problems) == "ABCDEFGHIJK"
