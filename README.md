@@ -33,6 +33,12 @@ You can also create your own generator, at `test_generators` folder, to brutefor
 $ fastsnake test <problem> -g <n_tests>
 ```
 
+### Starting a Custom Contest
+Use the command below to start your own contest.
+```
+$ fastsnake start-custom-contest <n_problems>
+```
+
 ### Algorithms and Structures
 
 FastSnake provides some algorithms and structures that can be injected to your final solution. See the sample below:
@@ -51,7 +57,7 @@ value = int(input())
 result = min_coins(coins, value)
 print(result)
 ```
-Use the argument `--list <algorithms | structures>` to see all algorithms and structures provided by FastSnake.
+Use the argument `--list <algorithms | structures | external>` to see all algorithms and structures provided by FastSnake.
 
 **Injecting the algorithm to the final solution...**
 ```
@@ -66,3 +72,11 @@ You may test and compile your solution using the command below:
 $ fastsnake test <problem> -c
 ```
 If the solution was accepted at all test cases, it will be compiled.
+
+
+### Adding External Modules:
+You may also add your own modules to the external package of fastsnake.
+```
+$ fastsnake add-external <path | url> --name <module_name>
+```
+Use `--list external` to see your module at the list.
