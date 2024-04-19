@@ -77,6 +77,6 @@ If the solution was accepted at all test cases, it will be compiled.
 ### Adding External Modules:
 You may also add your own modules to the external package of fastsnake.
 ```
-$ fastsnake add-external <path | url> --name <module_name>
+$ fastsnake add-external <path | url> --name <module_name> [--url]
 ```
-Use `--list external` to see your module at the list.
+For downloading the module from web, use the flag `--url`.
