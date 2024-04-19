@@ -2,7 +2,7 @@ __doc__ = """
 A Python Helper CLI for Competitive Programming
 """
 
-__version__ = "1.4.5"
+__version__ = "1.4.6"
 
 __author__ = "Jean Loui Bernard Silva de Jesus"
 __github__ = "https://github.com/JeanExtreme002"

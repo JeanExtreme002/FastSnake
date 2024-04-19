@@ -1,5 +1,6 @@
 from fastsnake.application.arg_parser import main_parser
 from fastsnake.application.config import contest_config_filename
+from fastsnake.application.external import add_external_module, delete_external_module
 from fastsnake.application.contest import start_contest
 from fastsnake.application.runner import run_test, run_test_generator
 from fastsnake.util.codeforces import *
@@ -157,6 +158,8 @@ def main() -> None:
 
     # List algorithms and structures.
     elif args.list:
+        print(f"[{args.list.upper()} MODULES]:")
+
         for name in os.listdir(os.path.join(project_path, args.list)):
             if "__" not in name:
                 print(f"- {name.replace('.py', '').replace('_', ' ').title()}")
@@ -182,6 +185,13 @@ def main() -> None:
         elif args.command == "start-custom-contest":
             start_custom_contest(args.n_problems)
 
+        # Add a external module.
+        elif args.command == "add-external":
+            add_external_module(args.filename, args.name, bool(args.url))
+
+        # Delete a external module.
+        elif args.command == "delete-external":
+            delete_external_module(args.module)
 
         # Tools for Codeforces.
         elif args.command == "codeforces":

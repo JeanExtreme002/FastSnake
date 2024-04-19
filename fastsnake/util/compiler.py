@@ -1,5 +1,6 @@
 import os
 
+
 path = os.path.join(os.path.dirname(__file__), "..")
 
 
@@ -10,6 +11,7 @@ def compile_code(input_filename: str, output_filename: str) -> None:
     valid_imports = [
         "from fastsnake.algorithms",
         "from fastsnake.structures",
+        "from fastsnake.external",
         "from fastsnake.entries"
     ]
     
@@ -22,7 +24,7 @@ def compile_code(input_filename: str, output_filename: str) -> None:
 
             # Clean the line and get the module name.
             line = line.replace("\n", "").replace(" ", "")
-            importing = line.replace("from", "").replace("import*", "").split(".")[1:]
+            importing = line.replace("from", "", 1).replace("import*", "").replace("import", ".", 1).split(".")[1:]
             
             # Get the absolute path to the module name.
             filename = os.path.join(path, *importing[:-1], importing[-1] + ".py")

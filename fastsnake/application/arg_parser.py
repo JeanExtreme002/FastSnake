@@ -3,7 +3,7 @@ from argparse import ArgumentParser
 
 main_parser = ArgumentParser(prog="FastSnake", description="CLI Tools for Competitive Programming")
 
-main_parser.add_argument("-l", "--list", type=str, choices=["algorithms", "structures"], help="List algorithm or structure modules")
+main_parser.add_argument("-l", "--list", type=str, choices=["algorithms", "structures", "external"], help="List algorithm, structure or external modules")
 main_parser.add_argument("-v", "--version", action="store_true", help="Print the fastsnake's version")
 main_parser.add_argument("--author", action="store_true", help="Print the author name")
 main_parser.add_argument("--credits", action="store_true", help="Print the credits of the project")
@@ -23,6 +23,16 @@ compile_parser.add_argument("filename", type=str, help="Python module")
 # Custom Contest.
 custom_contest_parser = command_parser.add_parser("start-custom-contest", help="Start a custom contest")
 custom_contest_parser.add_argument("n_problems", type=int, help="Amount of problems")
+
+# Add External Module.
+add_external_contest_parser = command_parser.add_parser("add-external", help="Add an external module")
+add_external_contest_parser.add_argument("filename", metavar="filename or url", type=str, help="Python module or URL")
+add_external_contest_parser.add_argument("-n", "--name", type=str, required=True, dest="name", help="External module name")
+add_external_contest_parser.add_argument("-u", "--url", action="store_true", dest="url", help="Indicates to download the code from the URL")
+
+# Delete External Module.
+delete_external_contest_parser = command_parser.add_parser("delete-external", help="Delete an external module")
+delete_external_contest_parser.add_argument("module", type=str, help="External module name")
 
 # Tools for Contest Platforms.
 codeforces_parser = command_parser.add_parser("codeforces", help="Tools for Codeforces platform")
