@@ -1,14 +1,17 @@
 from fastsnake.application.config import contest_config_filename
+from fastsnake.util.step_counter import inject_step_counter
 
 from tempfile import NamedTemporaryFile
 import importlib
 import json
 import os
+import random
 import sys
 import subprocess
+import string
 
 
-def run_test(problem: str) -> bool:
+def run_test(problem: str, step_counter: bool = False, debug: bool = False) -> bool:
     """
     Run the solution for a problem of the contest.
     """
@@ -43,6 +46,22 @@ def run_test(problem: str) -> bool:
         with NamedTemporaryFile("w", delete=False) as module:
             module.write(inject + code)
 
+        # Inject the step counter to the code, if required.
+        step_counter_variable = None
+
+        if step_counter:
+            step_counter_variable = inject_step_counter(module.name, module.name)
+
+        # Inject code to get a specific success code.
+        ascii_range = string.ascii_lowercase + string.ascii_uppercase
+        success_code = ":success_code" + "".join(random.choice(ascii_range) for _ in range(100)) + ":"
+
+        with open(module.name, mode="a") as file:
+            file.write(f"print('{success_code}')\n")
+
+        # Print the name of the module that will be executed, if debug is True.
+        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_case}:", module.name)
+
         # Run the solution.
         command = "python" if "win32" in sys.platform else "python3"
 
@@ -57,6 +76,20 @@ def run_test(problem: str) -> bool:
         result = result.decode("utf-8").strip().rstrip("\n").replace("\r", "")
         error = error.decode("utf-8")
 
+        # Check if there is any error.
+        success = False
+
+        if result.endswith(success_code):
+            result = result.replace(success_code, "").rstrip("\n")
+            success = True
+
+        # Get the result of the step counter.
+        step_counter_result = -1
+
+        if success and step_counter and result.endswith(step_counter_variable):
+            result, sc_result = result.split(f"{step_counter_variable}:")
+            step_counter_result = int(sc_result.replace(f":{step_counter_variable}", ""))
+
         # Load the expected output.
         output_filename = os.path.abspath(os.path.join(config["test_cases_namespace"], filename[:-2] + "out"))
 
@@ -64,7 +97,7 @@ def run_test(problem: str) -> bool:
             output = file.read().strip().replace("\r", "").rstrip("\n")
 
         # Compare the outputs.
-        if output != result:
+        if output != result or not success:
             with open(input_filename) as file:
                 input_data = file.read()
 
@@ -82,10 +115,12 @@ def run_test(problem: str) -> bool:
         test_case += 1
         
     print(f"SUCCESS!! Your solution was accepted at all {test_case} test cases.")
+    if step_counter: print(f"Approximate number of steps executed: {step_counter_result}")
+    
     return True
 
 
-def run_test_generator(problem: str, tests: int = 1) -> bool:
+def run_test_generator(problem: str, tests: int = 1, step_counter: bool = False, debug: bool = False) -> bool:
     """
     Run the solution for a problem of the contest.
     """
@@ -125,6 +160,22 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
         with NamedTemporaryFile("w", delete=False) as module:
             module.write(inject + code)
 
+        # Inject the step counter to the code, if required.
+        step_counter_variable = None
+
+        if step_counter:
+            step_counter_variable = inject_step_counter(module.name, module.name)
+
+        # Inject code to get a specific success code.
+        ascii_range = string.ascii_lowercase + string.ascii_uppercase
+        success_code = ":success_code" + "".join(random.choice(ascii_range) for _ in range(100)) + ":"
+
+        with open(module.name, mode="a") as file:
+            file.write(f"print('{success_code}')\n")
+
+        # Print the name of the module that will be executed, if debug is True.
+        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_id}:", module.name)
+
         # Run the solution.
         command = "python" if "win32" in sys.platform else "python3"
 
@@ -139,14 +190,28 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
         result = result.decode("utf-8").strip().rstrip("\n").replace("\r", "")
         error = error.decode("utf-8")
 
+        # Check if there is any error.
+        success = False
+
+        if result.endswith(success_code):
+            result = result.replace(success_code, "").rstrip("\n")
+            success = True
+
+        # Get the result of the step counter.
+        step_counter_result = -1
+
+        if success and step_counter and result.endswith(step_counter_variable):
+            result, sc_result = result.split(f"{step_counter_variable}:")
+            step_counter_result = int(sc_result.replace(f":{step_counter_variable}", ""))
+
+        # Check the output.
         try:
             check = generator.test_output(input_data, result)
         except NotImplementedError:
             print("ERROR: You must implement the generator() and test_ouput() at the generator module.")
             return False
 
-        # Check the output.
-        if not check:
+        if not check or not success:
             print(f"Failed at the generated test #{test_id}!!")
             print("[Input]:")
             print("\n".join(input_data))
@@ -154,6 +219,8 @@ def run_test_generator(problem: str, tests: int = 1) -> bool:
             print("[Output]:")
             print(result if result and not error else error)
             return False
+        
+        if step_counter: print(f"Approximate number of steps executed for test #{test_id}: {step_counter_result}")
         
     print(f"SUCCESS!! Your solution was accepted at all {tests} generated tests.")
     return True

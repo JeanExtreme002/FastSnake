@@ -18,6 +18,8 @@ test_parser = command_parser.add_parser("test", help="Test a solution for a cont
 test_parser.add_argument("problem", type=str, help="Problem of the contest")
 test_parser.add_argument("-c", "--compile", action="store_true", dest="test_and_compile", help="Test and compile the solution")
 test_parser.add_argument("-g", "--generator", type=int, metavar="n_tests", dest="generator", help="Use generator module to test the solution")
+test_parser.add_argument("-s", "--step-counter", action="store_true", dest="step_counter", help="Returns the approximate number of steps executed")
+test_parser.add_argument("--return-temp-module-for-debug", action="store_true", dest="debug")
 
 # Compiling Solutions.
 compile_parser = command_parser.add_parser("compile", help="Compile a python fastsnake solution")

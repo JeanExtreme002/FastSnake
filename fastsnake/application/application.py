@@ -228,9 +228,9 @@ def main() -> None:
         # Test the solution.
         if args.command == "test":
             if args.generator:
-                result = run_test_generator(args.problem, args.generator)
+                result = run_test_generator(args.problem, args.generator, args.step_counter, debug=args.debug)
             else:
-                result = run_test(args.problem)
+                result = run_test(args.problem, args.step_counter, debug=args.debug)
 
             if result and args.test_and_compile: 
                 compile(args.problem, problem=True)
