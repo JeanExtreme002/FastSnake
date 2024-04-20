@@ -90,6 +90,8 @@ def run_test(problem: str, step_counter: bool = False, debug: bool = False) -> b
             result, sc_result = result.split(f"{step_counter_variable}:")
             step_counter_result = int(sc_result.replace(f":{step_counter_variable}", ""))
 
+        result = result.rstrip("\n")
+
         # Load the expected output.
         output_filename = os.path.abspath(os.path.join(config["test_cases_namespace"], filename[:-2] + "out"))
 
@@ -203,6 +205,8 @@ def run_test_generator(problem: str, tests: int = 1, step_counter: bool = False,
         if success and step_counter and result.endswith(step_counter_variable):
             result, sc_result = result.split(f"{step_counter_variable}:")
             step_counter_result = int(sc_result.replace(f":{step_counter_variable}", ""))
+
+        result = result.rstrip("\n")
 
         # Check the output.
         try:
