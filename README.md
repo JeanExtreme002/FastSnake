@@ -41,6 +41,8 @@ You can also create your own generator, at `test_generators` folder, to brutefor
 ```
 $ fastsnake test <problem> -g <n_tests>
 ```
+*Note:* By default, FastSnake will analyze the output with case sensitivity. However, you can enable case-insensitive analysis by using the `--case-insensitive` flag.
+
 
 ### Starting a Custom Contest
 Use the command below to start your own contest.
@@ -75,7 +77,7 @@ $ fastsnake compile main.py
 Check out the code of the generated Python module.
 <br>
 
-### Testing and Compiling:
+### Testing and Compiling
 You may test and compile your solution using the command below:
 ```
 $ fastsnake test <problem> -c
@@ -83,9 +85,27 @@ $ fastsnake test <problem> -c
 If the solution was accepted at all test cases, it will be compiled.
 
 
-### Adding External Modules:
+### Adding External Modules
 You may also add your own modules to the external package of fastsnake.
 ```
 $ fastsnake add-external <path | url> --name <module_name> [--url]
 ```
 For downloading the module from web, use the flag `--url`.
+
+
+## Step Counter
+The `--step-counter` flag of the command `test` can be used to count the approximate number of steps executed by your solution. 
+
+By default, it analyzes the entire code, but you can set a starting point by adding the following comment on the line:
+```
+# [START STEP COUNTER]
+...
+```
+**Note:** The step counter only analyzes the code that has been required for testing. This means that if you don't compile your code before testing using the `--compile-before` flag, it won't consider fastsnake algorithms and structures.
+
+
+## More Information
+Use the following command for more information about FastSnake CLI:
+```
+$ fastsnake -h
+```

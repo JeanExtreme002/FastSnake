@@ -45,6 +45,11 @@ def inject_step_counter(input_filename: str, output_filename: str) -> str:
 
             line = line.replace("\t", " " * 4)
 
+            # Set the start of the counter if a special annotation was found.
+            if "#" in cleaned_line and cleaned_line.replace("#", "").strip().lower().startswith("[start step counter]"):
+                file.write(get_indent(line) + f"{variable} = 0\n")
+                continue
+
             # Count statements for flow control, inserting the counting before the line.
             if cleaned_line.startswith("return") or cleaned_line.startswith("continue") or cleaned_line.startswith("break"):
                 file.write(get_indent(line) + f"{variable} += 1\n")

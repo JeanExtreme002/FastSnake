@@ -58,6 +58,7 @@ def start_contest(
     for problem in config["problems"]:
         with open(os.path.join(config["test_generators_namespace"], "generator_" + problem.upper() + ".py"), "w") as file:
             file.write("# Test case generator for problem " + problem + ". Modify this file.\n\n")
+            file.write("from typing import Generator\n")
             file.write("import random\n")
             file.write("import string\n")
             file.write("\n\n")
@@ -73,7 +74,7 @@ def start_contest(
             file.write("def gen_string_array(size: int, start: int, end: int, letters: str = string.ascii_lowercase):\n")
             file.write("    return ' '.join(gen_string(gen_int(start, end), letters) for _ in range(size))\n")
             file.write("\n\n")
-            file.write("def generate(test_id: int, case_insensitive: bool) -> \"Generator\":  # Yield any data type (it will be converted to str later)\n")
+            file.write("def generate(test_id: int, case_insensitive: bool) -> Generator:  # Yield any data type (it will be converted to str later)\n")
             file.write("    # Sample code ...\n")
             file.write("    yield gen_int(0, 100)\n")
             file.write("    yield gen_int_array(10, 0, 100)\n")
@@ -81,6 +82,9 @@ def start_contest(
             file.write("    yield gen_string_array(10, 1, 20, string.ascii_uppercase + string.ascii_lowercase)\n")
             file.write("\n\n")
             file.write("def test_output(input_: list[str], output: str, case_insensitive: bool) -> bool:\n")
+            file.write("    '''\n")
+            file.write("    If 'case_insensitive' is True, is guaranteed that the output will always be in lowercase.\n")
+            file.write("    '''\n")
             file.write("    raise NotImplementedError()")
             file.write("\n")
 
