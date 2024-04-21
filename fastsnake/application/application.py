@@ -1,41 +1,18 @@
 from fastsnake.application.arg_parser import main_parser
-from fastsnake.application.config import contest_config_filename
 from fastsnake.application.external import add_external_module, delete_external_module
 from fastsnake.application.contest import start_contest
-from fastsnake.application.runner import run_test, run_test_generator
+from fastsnake.application.runner import compile, run_test, run_test_generator
 from fastsnake.util import atcoder
 from fastsnake.util import codeforces
-from fastsnake.util.compiler import compile_code
 
 from typing import List
 
 import fastsnake
-import json
 import os
 
 
 project_path = os.path.join(os.path.dirname(__file__), "..")
 args = main_parser.parse_args()
-
-
-def compile(filename: str, problem: bool = False) -> None:
-    """
-    Compile a solution.
-    """        
-    # If the provided filename does not contains PY extension, check if it is a contest problem.
-    if not filename.endswith(".py") and problem:
-        with open(contest_config_filename) as file:
-            config = json.load(file)
-                
-        filename = os.path.join(config["solutions_namespace"], filename + ".py")
-
-    # Get the output filename and compile the solution.
-    base_name = os.path.basename(filename)
-    directory = os.path.dirname(filename)
-
-    output_filename = os.path.join(directory, "compiled_" + base_name)
-    
-    compile_code(filename, output_filename)
 
 
 def load_atcoder_problem(contest_id: str, problem: str, directory: str, namespace: str) -> None:
@@ -228,12 +205,24 @@ def main() -> None:
         # Test the solution.
         if args.command == "test":
             if args.generator:
-                result = run_test_generator(args.problem, args.generator, args.step_counter, debug=args.debug)
+                run_test_generator(
+                    args.problem, 
+                    args.generator, 
+                    args.step_counter, 
+                    compile_before=args.compile_before,
+                    compile_after=args.test_and_compile,
+                    case_insensitive=args.case_insensitive,
+                    debug=args.debug
+                )
             else:
-                result = run_test(args.problem, args.step_counter, debug=args.debug)
-
-            if result and args.test_and_compile: 
-                compile(args.problem, problem=True)
+                run_test(
+                    args.problem, 
+                    args.step_counter, 
+                    compile_before=args.compile_before,
+                    compile_after=args.test_and_compile,
+                    case_insensitive=args.case_insensitive,
+                    debug=args.debug
+                )
         
         # Compile a fastsnake solution.
         elif args.command == "compile":

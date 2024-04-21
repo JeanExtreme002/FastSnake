@@ -1,7 +1,9 @@
 from fastsnake.application.config import contest_config_filename
+from fastsnake.util.compiler import compile_code
 from fastsnake.util.step_counter import inject_step_counter
 
 from tempfile import NamedTemporaryFile
+
 import importlib
 import json
 import os
@@ -11,7 +13,29 @@ import subprocess
 import string
 
 
-def run_test(problem: str, step_counter: bool = False, debug: bool = False) -> bool:
+def compile(filename: str) -> None:
+    """
+    Compile a solution.
+    """        
+    # Get the output filename and compile the solution.
+    base_name = os.path.basename(filename)
+    directory = os.path.dirname(filename)
+
+    output_filename = os.path.join(directory, "compiled_" + base_name)
+    
+    compile_code(filename, output_filename)
+
+    return output_filename
+
+
+def run_test(
+    problem: str, 
+    step_counter: bool = False, 
+    compile_before: bool = False, 
+    compile_after: bool = False, 
+    case_insensitive: bool = False,
+    debug: bool = False
+) -> bool:
     """
     Run the solution for a problem of the contest.
     """
@@ -21,6 +45,16 @@ def run_test(problem: str, step_counter: bool = False, debug: bool = False) -> b
     if not problem in config["problems"]:
         raise ValueError(f"Invalid problem ID: {problem}")
 
+    # Get the source code.
+    module = os.path.join(config["solutions_namespace"], problem.upper() + ".py")
+
+    if compile_before:
+        module = compile(module)
+
+    with open(module) as file:
+        source_code = file.read() + "\n"
+
+    # Check the solution for the test cases.
     test_case = 0
     
     for filename in os.listdir(config["test_cases_namespace"]):
@@ -38,35 +72,30 @@ def run_test(problem: str, step_counter: bool = False, debug: bool = False) -> b
         # Copy the module, injecting a code for loading input data.
         inject = f"import sys\nsys.stdin = open(r'{input_filename}', 'r')\n\n"
 
-        module = os.path.join(config["solutions_namespace"], problem.upper() + ".py")
-
-        with open(module) as module:
-            code = module.read()
-
-        with NamedTemporaryFile("w", delete=False) as module:
-            module.write(inject + code)
+        with NamedTemporaryFile("w", delete=False) as temp_module:
+            temp_module.write(inject + source_code)
 
         # Inject the step counter to the code, if required.
         step_counter_variable = None
 
         if step_counter:
-            step_counter_variable = inject_step_counter(module.name, module.name)
+            step_counter_variable = inject_step_counter(temp_module.name, temp_module.name)
 
         # Inject code to get a specific success code.
         ascii_range = string.ascii_lowercase + string.ascii_uppercase
         success_code = ":success_code" + "".join(random.choice(ascii_range) for _ in range(100)) + ":"
 
-        with open(module.name, mode="a") as file:
+        with open(temp_module.name, mode="a") as file:
             file.write(f"print('{success_code}')\n")
 
         # Print the name of the module that will be executed, if debug is True.
-        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_case}:", module.name)
+        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_case}:", temp_module.name)
 
         # Run the solution.
         command = "python" if "win32" in sys.platform else "python3"
 
         process = subprocess.Popen(
-            [command, module.name], 
+            [command, temp_module.name], 
             stdout=subprocess.PIPE, 
             stderr=subprocess.PIPE, 
             shell=False,
@@ -99,6 +128,10 @@ def run_test(problem: str, step_counter: bool = False, debug: bool = False) -> b
             output = file.read().strip().replace("\r", "").rstrip("\n")
 
         # Compare the outputs.
+        if case_insensitive:
+            result = result.lower()
+            output = output.lower()
+
         if output != result or not success:
             with open(input_filename) as file:
                 input_data = file.read()
@@ -119,10 +152,21 @@ def run_test(problem: str, step_counter: bool = False, debug: bool = False) -> b
     print(f"SUCCESS!! Your solution was accepted at all {test_case} test cases.")
     if step_counter: print(f"Approximate number of steps executed: {step_counter_result}")
     
+    if compile_after and not compile_before:
+        compile(module)
+
     return True
 
 
-def run_test_generator(problem: str, tests: int = 1, step_counter: bool = False, debug: bool = False) -> bool:
+def run_test_generator(
+    problem: str, 
+    tests: int = 1, 
+    step_counter: bool = False,
+    compile_before: bool = False,
+    compile_after: bool = False,
+    case_insensitive: bool = False,
+    debug: bool = False
+) -> bool:
     """
     Run the solution for a problem of the contest.
     """
@@ -132,6 +176,15 @@ def run_test_generator(problem: str, tests: int = 1, step_counter: bool = False,
     if not problem in config["problems"]:
         raise ValueError(f"Invalid problem ID: {problem}")
     
+    # Get the source code.
+    module = os.path.join(config["solutions_namespace"], problem.upper() + ".py")
+
+    if compile_before:
+        module = compile(module)
+
+    with open(module) as file:
+        source_code = file.read() + "\n"
+
     # Import the generator module.
     path = config["test_generators_namespace"]
 
@@ -142,7 +195,7 @@ def run_test_generator(problem: str, tests: int = 1, step_counter: bool = False,
 
     # Run the tests.
     for test_id in range(tests):
-        input_data = [str(line) for line in generator.generate(test_id)]
+        input_data = [str(line) for line in generator.generate(test_id, case_insensitive=case_insensitive)]
 
         # Create an input file.
         with NamedTemporaryFile("w", delete=False) as input_file:
@@ -154,35 +207,30 @@ def run_test_generator(problem: str, tests: int = 1, step_counter: bool = False,
         # Copy the module, injecting a code for loading input data.
         inject = f"import sys\nsys.stdin = open(r'{input_filename}', 'r')\n\n"
 
-        module = os.path.join(config["solutions_namespace"], problem.upper() + ".py")
-
-        with open(module) as module:
-            code = module.read()
-
-        with NamedTemporaryFile("w", delete=False) as module:
-            module.write(inject + code)
+        with NamedTemporaryFile("w", delete=False) as temp_module:
+            temp_module.write(inject + source_code)
 
         # Inject the step counter to the code, if required.
         step_counter_variable = None
 
         if step_counter:
-            step_counter_variable = inject_step_counter(module.name, module.name)
+            step_counter_variable = inject_step_counter(temp_module.name, temp_module.name)
 
         # Inject code to get a specific success code.
         ascii_range = string.ascii_lowercase + string.ascii_uppercase
         success_code = ":success_code" + "".join(random.choice(ascii_range) for _ in range(100)) + ":"
 
-        with open(module.name, mode="a") as file:
+        with open(temp_module.name, mode="a") as file:
             file.write(f"print('{success_code}')\n")
 
         # Print the name of the module that will be executed, if debug is True.
-        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_id}:", module.name)
+        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_id}:", temp_module.name)
 
         # Run the solution.
         command = "python" if "win32" in sys.platform else "python3"
 
         process = subprocess.Popen(
-            [command, module.name], 
+            [command, temp_module.name], 
             stdout=subprocess.PIPE, 
             stderr=subprocess.PIPE, 
             shell=False,
@@ -209,8 +257,11 @@ def run_test_generator(problem: str, tests: int = 1, step_counter: bool = False,
         result = result.rstrip("\n")
 
         # Check the output.
+        if case_insensitive:
+            result = result.lower()
+
         try:
-            check = generator.test_output(input_data, result)
+            check = generator.test_output(input_data, result, case_insensitive=case_insensitive)
         except NotImplementedError:
             print("ERROR: You must implement the generator() and test_ouput() at the generator module.")
             return False
@@ -227,4 +278,8 @@ def run_test_generator(problem: str, tests: int = 1, step_counter: bool = False,
         if step_counter: print(f"Approximate number of steps executed for test #{test_id}: {step_counter_result}")
         
     print(f"SUCCESS!! Your solution was accepted at all {tests} generated tests.")
+
+    if compile_after and not compile_before:
+        compile(module)
+
     return True

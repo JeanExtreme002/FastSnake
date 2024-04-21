@@ -37,3 +37,6 @@ def compile_code(input_filename: str, output_filename: str) -> None:
     # Write the compiled code.
     with open(output_filename, "w") as file:
         file.write(string)
+        file.write("\n\n# " + "=" * 50 + "\n")
+        file.write("# COMPILED SOLUTION \n")
+        file.write("# " + "=" * 50 + "\n\n")

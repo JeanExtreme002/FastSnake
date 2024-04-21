@@ -15,6 +15,15 @@ This project provides useful CLI tools for competitive programming, such as algo
 $ pip install FastSnake
 ```
 
+Use one of the commands below to check if the installation was successful.
+```
+$ fastsnake -v
+```
+or
+```
+$ python3 -m fastsnake -v
+```
+
 ## Basic Usage:
 Starting a contest from Codeforces...
 ```
