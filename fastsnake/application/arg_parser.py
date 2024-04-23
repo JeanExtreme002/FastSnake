@@ -20,6 +20,7 @@ test_parser.add_argument("-c", "--compile", action="store_true", dest="test_and_
 test_parser.add_argument("-cb", "--compile-before", action="store_true", dest="compile_before", help="Compile the solution and test after")
 test_parser.add_argument("-g", "--generator", type=int, metavar="n_tests", dest="generator", help="Use generator module to test the solution")
 test_parser.add_argument("-s", "--step-counter", action="store_true", dest="step_counter", help="Returns the approximate number of steps executed")
+test_parser.add_argument("-s10", "--step-counter-10", action="store_true", dest="step_counter_10", help="Returns the approximate number of steps executed, in power of ten notation")
 test_parser.add_argument("-ci", "--case-insensitive", action="store_true", dest="case_insensitive", help="Indicates the output is case insensitive")
 test_parser.add_argument("--return-temp-module-for-debug", action="store_true", dest="debug")
 

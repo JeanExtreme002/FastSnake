@@ -6,6 +6,7 @@ from tempfile import NamedTemporaryFile
 
 import importlib
 import json
+import math
 import os
 import random
 import sys
@@ -31,6 +32,7 @@ def compile(filename: str) -> None:
 def run_test(
     problem: str, 
     step_counter: bool = False, 
+    step_counter_10: bool = False, 
     compile_before: bool = False, 
     compile_after: bool = False, 
     case_insensitive: bool = False,
@@ -39,6 +41,8 @@ def run_test(
     """
     Run the solution for a problem of the contest.
     """
+    step_counter = step_counter or step_counter_10
+
     with open(contest_config_filename) as file:
         config = json.load(file)
 
@@ -102,14 +106,14 @@ def run_test(
         )
         result, error = process.communicate()
 
-        result = result.decode("utf-8").strip().rstrip("\n").replace("\r", "")
+        result = result.decode("utf-8").strip().strip("\n").replace("\r", "")
         error = error.decode("utf-8")
 
         # Check if there is any error.
         success = False
 
         if result.endswith(success_code):
-            result = result.replace(success_code, "").rstrip("\n")
+            result = result.replace(success_code, "").strip("\n")
             success = True
 
         # Get the result of the step counter.
@@ -119,13 +123,13 @@ def run_test(
             result, sc_result = result.split(f"{step_counter_variable}:")
             step_counter_result = int(sc_result.replace(f":{step_counter_variable}", ""))
 
-        result = result.rstrip("\n")
-
         # Load the expected output.
         output_filename = os.path.abspath(os.path.join(config["test_cases_namespace"], filename[:-2] + "out"))
 
         with open(output_filename) as file:
-            output = file.read().strip().replace("\r", "").rstrip("\n")
+            output = file.read().replace("\r", "").strip("\n").strip()
+
+        result = result.strip("\n").strip()
 
         # Compare the outputs.
         if case_insensitive:
@@ -141,7 +145,8 @@ def run_test(
             print(input_data)
             print("=" * 40)
             print("[Your Output]:")
-            print(error if error and not result else result)
+            print(result)
+            if error: print(error)
             print("=" * 40)
             print("[Expected Output]:")
             print(output)
@@ -150,7 +155,14 @@ def run_test(
         test_case += 1
         
     print(f"SUCCESS!! Your solution was accepted at all {test_case} test cases.")
-    if step_counter: print(f"Approximate number of steps executed: {step_counter_result}")
+    
+    if step_counter: 
+        if step_counter_10:
+            step_counter_result = int(step_counter_result)
+            exp = int(math.log(step_counter_result, 10))
+            n = int(step_counter_result / (10**exp))
+            step_counter_result = f"{n} * 10 ^ {exp}"
+        print(f"Approximate number of steps executed: {step_counter_result}")
     
     if compile_after and not compile_before:
         compile(module)
@@ -162,6 +174,7 @@ def run_test_generator(
     problem: str, 
     tests: int = 1, 
     step_counter: bool = False,
+    step_counter_10: bool = False,
     compile_before: bool = False,
     compile_after: bool = False,
     case_insensitive: bool = False,
@@ -170,6 +183,8 @@ def run_test_generator(
     """
     Run the solution for a problem of the contest.
     """
+    step_counter = step_counter or step_counter_10
+
     with open(contest_config_filename) as file:
         config = json.load(file)
 
@@ -237,14 +252,14 @@ def run_test_generator(
         )
         result, error = process.communicate()
 
-        result = result.decode("utf-8").strip().rstrip("\n").replace("\r", "")
+        result = result.decode("utf-8").replace("\r", "").strip().strip("\n")
         error = error.decode("utf-8")
 
         # Check if there is any error.
         success = False
 
         if result.endswith(success_code):
-            result = result.replace(success_code, "").rstrip("\n")
+            result = result.replace(success_code, "").strip("\n")
             success = True
 
         # Get the result of the step counter.
@@ -254,7 +269,7 @@ def run_test_generator(
             result, sc_result = result.split(f"{step_counter_variable}:")
             step_counter_result = int(sc_result.replace(f":{step_counter_variable}", ""))
 
-        result = result.rstrip("\n")
+        result = result.strip("\n").strip()
 
         # Check the output.
         if case_insensitive:
@@ -272,10 +287,17 @@ def run_test_generator(
             print("\n".join(input_data))
             print("=" * 40)
             print("[Output]:")
-            print(result if result and not error else error)
+            print(result)
+            if error: print(error)
             return False
         
-        if step_counter: print(f"Approximate number of steps executed for test #{test_id}: {step_counter_result}")
+        if step_counter: 
+            if step_counter_10:
+                step_counter_result = int(step_counter_result)
+                exp = int(math.log(step_counter_result, 10))
+                n = int(step_counter_result / (10**exp))
+                step_counter_result = f"{n} * 10 ^ {exp}"
+            print(f"Approximate number of steps executed for test #{test_id}: {step_counter_result}")
         
     print(f"SUCCESS!! Your solution was accepted at all {tests} generated tests.")
 

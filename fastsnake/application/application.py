@@ -209,6 +209,7 @@ def main() -> None:
                     args.problem, 
                     args.generator, 
                     args.step_counter, 
+                    args.step_counter_10, 
                     compile_before=args.compile_before,
                     compile_after=args.test_and_compile,
                     case_insensitive=args.case_insensitive,
@@ -218,6 +219,7 @@ def main() -> None:
                 run_test(
                     args.problem, 
                     args.step_counter, 
+                    args.step_counter_10, 
                     compile_before=args.compile_before,
                     compile_after=args.test_and_compile,
                     case_insensitive=args.case_insensitive,
