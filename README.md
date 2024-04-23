@@ -5,6 +5,7 @@
 [![License](https://img.shields.io/pypi/l/FastSnake)](https://github.com/JeanExtreme002/FastSnake)
 [![Platforms](https://img.shields.io/badge/platforms-Windows%20%7C%20Linux-8A2BE2)](https://pypi.org/project/FastSnake/)
 [![Python Version](https://img.shields.io/badge/python-3.7+-yellow)](https://pypi.org/project/FastSnake/)
+[![Downloads](https://static.pepy.tech/personalized-badge/fastsnake?period=total&units=international_system&left_color=grey&right_color=orange&left_text=downloads)](https://pypi.org/project/FastSnake/)
 
 Tired of having to copy-paste your library code into every solution you write? FastSnake is a command-line tool that allows you to easily create, expand, run and test Python solutions for competitive programming problems.
 
