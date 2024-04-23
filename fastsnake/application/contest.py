@@ -31,6 +31,7 @@ def start_contest(
     for problem in config["problems"]:
         with open(os.path.join(config["solutions_namespace"], problem.upper() + ".py"), "w") as file:
             file.write("# Solution for problem " + problem + "\n\n")
+            file.write("# [START STEP COUNTER]\n\n")
             file.write("# from fastsnake.algorithms.something import *\n")
             file.write("# from fastsnake.structures.something import *\n")
             file.write("# from fastsnake.external.your_external_module import *\n")
