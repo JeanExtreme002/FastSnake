@@ -29,12 +29,33 @@ def compile(filename: str) -> None:
     return output_filename
 
 
+def sort_output_lines(output: str):
+    """
+    Sort the lines of the output.
+    """
+    return "\n".join(sorted(output.split("\n")))
+
+
+def sort_output_elements(output: str):
+    """
+    Sort the elements of every line of the output.
+    """
+    new_output = ""
+
+    for line in output.split("\n"):
+        new_output += " ".join(sorted(line.split(" "))) + "\n"
+
+    return new_output
+
+
 def run_test(
     problem: str, 
     step_counter: bool = False, 
     step_counter_10: bool = False, 
     compile_before: bool = False, 
     compile_after: bool = False, 
+    sort_lines: bool = False, 
+    sort_elements: bool = False, 
     case_insensitive: bool = False,
     debug: bool = False
 ) -> bool:
@@ -136,6 +157,14 @@ def run_test(
             result = result.lower()
             output = output.lower()
 
+        if sort_elements:
+            result = sort_output_elements(result)
+            output = sort_output_elements(output)
+
+        if sort_lines:
+            result = sort_output_lines(result)
+            output = sort_output_lines(output)
+
         if output != result or not success:
             with open(input_filename) as file:
                 input_data = file.read()
@@ -177,6 +206,8 @@ def run_test_generator(
     step_counter_10: bool = False,
     compile_before: bool = False,
     compile_after: bool = False,
+    sort_lines: bool = False, 
+    sort_elements: bool = False, 
     case_insensitive: bool = False,
     debug: bool = False
 ) -> bool:
@@ -210,7 +241,7 @@ def run_test_generator(
 
     # Run the tests.
     for test_id in range(tests):
-        input_data = [str(line) for line in generator.generate(test_id, case_insensitive=case_insensitive)]
+        input_data = [str(line) for line in generator.generate(test_id)]
 
         # Create an input file.
         with NamedTemporaryFile("w", delete=False) as input_file:
@@ -275,8 +306,14 @@ def run_test_generator(
         if case_insensitive:
             result = result.lower()
 
+        if sort_elements:
+            result = sort_output_elements(result)
+
+        if sort_lines:
+            result = sort_output_lines(result)
+
         try:
-            check = generator.test_output(input_data, result, case_insensitive=case_insensitive)
+            check = generator.test_output(input_data, result)
         except NotImplementedError:
             print("ERROR: You must implement the generator() and test_ouput() at the generator module.")
             return False

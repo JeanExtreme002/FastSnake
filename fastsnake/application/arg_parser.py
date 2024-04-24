@@ -22,6 +22,8 @@ test_parser.add_argument("-g", "--generator", type=int, metavar="n_tests", dest=
 test_parser.add_argument("-s", "--step-counter", action="store_true", dest="step_counter", help="Returns the approximate number of steps executed")
 test_parser.add_argument("-s10", "--step-counter-10", action="store_true", dest="step_counter_10", help="Returns the approximate number of steps executed, in power of ten notation")
 test_parser.add_argument("-ci", "--case-insensitive", action="store_true", dest="case_insensitive", help="Indicates the output is case insensitive")
+test_parser.add_argument("-sl", "--sort-lines", action="store_true", dest="sort_lines", help="Sort lines of the output to compare")
+test_parser.add_argument("-se", "--sort-elements", action="store_true", dest="sort_elements", help="Sort elements of every line of the output to compare")
 test_parser.add_argument("--return-temp-module-for-debug", action="store_true", dest="debug")
 
 # Compiling Solutions.

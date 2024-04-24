@@ -212,6 +212,8 @@ def main() -> None:
                     args.step_counter_10, 
                     compile_before=args.compile_before,
                     compile_after=args.test_and_compile,
+                    sort_elements=args.sort_elements,
+                    sort_lines=args.sort_lines,
                     case_insensitive=args.case_insensitive,
                     debug=args.debug
                 )
@@ -222,6 +224,8 @@ def main() -> None:
                     args.step_counter_10, 
                     compile_before=args.compile_before,
                     compile_after=args.test_and_compile,
+                    sort_elements=args.sort_elements,
+                    sort_lines=args.sort_lines,
                     case_insensitive=args.case_insensitive,
                     debug=args.debug
                 )
