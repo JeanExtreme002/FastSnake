@@ -68,7 +68,12 @@ def get_problem_test_cases(id_: int, problem: str, namespace: str = "contest") -
         if divs:
             string = "\n".join(data.text for data in divs)
         else: 
-            string = pre.text
+            brs = pre.find_all("br")
+
+            if brs:
+                string = "\n".join([list(br.previous_siblings)[0] for br in brs])
+            else:
+                string = pre.text
 
         inputs.append(string)
 

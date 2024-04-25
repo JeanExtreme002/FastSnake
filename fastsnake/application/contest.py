@@ -25,8 +25,13 @@ def start_contest(
     if not os.path.exists(config["solutions_namespace"]):
         os.mkdir(config["solutions_namespace"])
 
-    for filename in os.listdir(config["solutions_namespace"]):
-        os.remove(os.path.join(config["solutions_namespace"], filename))
+    if os.path.exists(config["solutions_namespace"]):
+        for filename in os.listdir(config["solutions_namespace"]):
+            os.remove(os.path.join(config["solutions_namespace"], filename))
+
+    if os.path.exists(config["test_generators_namespace"]):
+        for filename in os.listdir(config["test_generators_namespace"]):
+            os.remove(os.path.join(config["test_generators_namespace"], filename))
 
     for problem in config["problems"]:
         with open(os.path.join(config["solutions_namespace"], problem.upper() + ".py"), "w") as file:

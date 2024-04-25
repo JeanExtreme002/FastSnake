@@ -48,6 +48,13 @@ def sort_output_elements(output: str):
     return new_output
 
 
+def strip_output_lines(output: str):
+    """
+    Strip every line of the output.
+    """
+    return "\n".join([line.strip() for line in output.split("\n")])
+
+
 def run_test(
     problem: str, 
     step_counter: bool = False, 
@@ -153,6 +160,9 @@ def run_test(
         result = result.strip("\n").strip()
 
         # Compare the outputs.
+        result = strip_output_lines(result)
+        output = strip_output_lines(output)
+
         if case_insensitive:
             result = result.lower()
             output = output.lower()
@@ -303,6 +313,8 @@ def run_test_generator(
         result = result.strip("\n").strip()
 
         # Check the output.
+        result = strip_output_lines(result)
+
         if case_insensitive:
             result = result.lower()
 
