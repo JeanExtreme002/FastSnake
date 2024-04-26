@@ -13,5 +13,5 @@ def upper_bound(array, x):
 
     low = low - 1
 
-    return -1 if low >= len(array) or low < 0 or array[low] != x else low
+    return -1 if low >= len(array) or low < 0 or array[low] > x else low
 

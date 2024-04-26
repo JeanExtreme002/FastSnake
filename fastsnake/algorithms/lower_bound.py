@@ -11,5 +11,5 @@ def lower_bound(array, x):
         else:
             low = mid + 1
 
-    return -1 if low >= len(array) or array[low] != x else low
+    return -1 if low >= len(array) or array[low] < x else low
 
