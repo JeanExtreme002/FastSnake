@@ -40,7 +40,7 @@ def start_contest(
             file.write("# Python is not recommended for recursive solutions.\n")
             file.write("import sys\n")
             file.write("sys.setrecursionlimit(2 * 10**9)\n\n")
-            file.write("# IMPORT FASTSNAKE ALGORITHMS OR STRUCTURES OR YOUR EXTERNAL MODULES.")
+            file.write("# IMPORT FASTSNAKE ALGORITHMS OR STRUCTURES OR YOUR EXTERNAL MODULES.\n")
             file.write("# from fastsnake.algorithms.something import *\n")
             file.write("# from fastsnake.structures.something import *\n")
             file.write("# from fastsnake.external.your_external_module import *\n")
