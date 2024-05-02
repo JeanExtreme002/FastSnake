@@ -2,7 +2,7 @@
 # Tempo: O(N * capacity)
 # Espaço: O(capacity)
 
-def knapsack(profit, weight, capacity, n = None):
+def knapsack(profit: list, weight: list, capacity: int, n = None):
     """
     Returns the maximum value that can be put in a knapsack of capacity W.
     
