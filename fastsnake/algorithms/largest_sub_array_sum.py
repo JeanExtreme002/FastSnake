@@ -1,7 +1,4 @@
-# Python program to find maximum contiguous subarray
-
 from math import inf
-from typing import Callable, Optional
 
 maxint = inf
 
