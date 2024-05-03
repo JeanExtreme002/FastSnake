@@ -251,7 +251,16 @@ def run_test_generator(
 
     # Run the tests.
     for test_id in range(tests):
-        input_data = [str(line) for line in generator.generate(test_id)]
+        input_data = list()
+        original_input_data = list()
+
+        for line in generator.generate(test_id):
+            if type(line) in [bool, int, float, str]:
+                input_data.append(str(line))
+            else:
+                input_data.append(" ".join([str(element) for element in line]))
+
+            original_input_data.append(line)
 
         # Create an input file.
         with NamedTemporaryFile("w", delete=False) as input_file:
@@ -325,7 +334,7 @@ def run_test_generator(
             result = sort_output_lines(result)
 
         try:
-            check = generator.test_output(input_data, result)
+            check = generator.test_output(original_input_data, result)
         except NotImplementedError:
             print("ERROR: You must implement the generator() and test_ouput() at the generator module.")
             return False
