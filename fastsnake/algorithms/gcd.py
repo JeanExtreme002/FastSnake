@@ -2,8 +2,8 @@ def gcd(a: int, b: int) -> int:
     """
     Euclidean Algorithm for Greatest Common Divisor (GCD)
 
-    Complexity: O(log(min(a, b)))
+    Complexity: O(log(n))
     """
-    if a == 0:
-        return b
-    return gcd(b % a, a)
+    while b != 0:
+        a, b = b, a % b
+    return a
