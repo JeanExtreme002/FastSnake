@@ -10,6 +10,7 @@ main_parser.add_argument("-l", "--list", type=str, choices=["algorithms", "struc
 main_parser.add_argument("-v", "--version", action="store_true", help="Print the fastsnake's version")
 main_parser.add_argument("--author", action="store_true", help="Print the author name")
 main_parser.add_argument("--credits", action="store_true", help="Print the credits of the project")
+main_parser.add_argument("-tp", "--template-path", dest="template_path", action="store_true", help="Return the path to the location where the templates are stored")
 
 command_parser = main_parser.add_subparsers(title="Fastsnake CLI Commands", dest="command")
 

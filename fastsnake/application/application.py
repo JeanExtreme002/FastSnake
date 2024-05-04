@@ -1,6 +1,6 @@
 from fastsnake.application.arg_parser import main_parser
 from fastsnake.application.external import add_external_module, delete_external_module
-from fastsnake.application.contest import start_contest
+from fastsnake.application.contest import start_contest, template_path
 from fastsnake.application.runner import compile, run_test, run_test_generator
 from fastsnake.util import atcoder
 from fastsnake.util import codeforces
@@ -190,6 +190,9 @@ def main() -> None:
 
     elif args.credits:
         print(fastsnake.__credits__)
+
+    elif args.template_path:
+        print(template_path)
 
     # List algorithms and structures.
     elif args.list:
