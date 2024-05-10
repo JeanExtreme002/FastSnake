@@ -34,6 +34,7 @@ putm = input_int_matrix  # Other: input_{char, float, string}_array
 
 # >>> HEY, RIGHT HERE!! Write your code below:
 # Remember, sometimes the solution is much simpler than you think S2
+import math
 
 for test_case in range(int(input())):
     n = int(input())
