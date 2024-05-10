@@ -1,7 +1,12 @@
 # [START STEP COUNTER]
 
-# Python is NOT recommended for recursive solutions.
 import sys
+
+# Optimization to speed up input.
+input = sys.stdin.readline
+
+# Python is NOT recommended for recursive solutions.
+# If you use PyPy, consider removing the line below.
 sys.setrecursionlimit(2 * 10**9)
 
 # Time-complexity of Python implementations: https://wiki.python.org/moin/TimeComplexity
