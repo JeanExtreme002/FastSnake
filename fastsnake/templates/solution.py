@@ -2,12 +2,20 @@
 
 import sys
 
-# Optimization to speed up input.
-input = sys.stdin.readline
-
 # Python is NOT recommended for recursive solutions.
 # If you use PyPy, consider removing the line below.
 sys.setrecursionlimit(2 * 10**9)
+
+# Optimizations to speed up input and output.
+def optimized_input(remove_newline: bool = True):
+    string = sys.stdin.readline()
+    return string.rstrip("\n") if remove_newline else string
+
+def optimized_print(*args, end="\n"):
+    sys.stdout.write(" ".join(map(str, args)) + end)
+
+# Set by default, as this input customization is generally better.
+input = optimized_input
 
 # Time-complexity of Python implementations: https://wiki.python.org/moin/TimeComplexity
 # A deque (double-ended queue) is a doubly linked list. Complexity O(1) for append and pop operations.
@@ -27,7 +35,7 @@ import heapq
 # from fastsnake.structures.something import *
 # from fastsnake.external.your_external_module import *
 
-# Just remove the fastsnake code below if you will not use it.
+# [WARNING]: Just remove the fastsnake code below if you will not use it.
 # ======================================================================
 from fastsnake.entries import *
 put = input
@@ -36,6 +44,8 @@ putf = input_float
 puta = input_int_array   # Other: input_float_array
 putm = input_int_matrix  # Other: input_{char, float, string}_array
 # ======================================================================
+
+print = optimized_print
 
 # >>> HEY, RIGHT HERE!! Write your code below:
 # Remember, sometimes the solution is much simpler than you think S2
