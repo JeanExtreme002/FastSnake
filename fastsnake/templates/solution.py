@@ -36,14 +36,14 @@ import heapq
 # from fastsnake.external.your_external_module import *
 
 # [WARNING]: Just remove the fastsnake code below if you will not use it.
-# ======================================================================
+# =============================================================================
 from fastsnake.entries import *
 put = input
 puti = input_int
 putf = input_float
-puta = input_int_array   # Other: input_float_array
-putm = input_int_matrix  # Other: input_{char, float, string}_array
-# ======================================================================
+puta = input_int_array   # Functions: input_{int, float}_array
+putm = input_int_matrix  # Functions: input_{char, int, float, string}_matrix
+# =============================================================================
 
 print = optimized_print
 
