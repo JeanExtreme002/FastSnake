@@ -1,6 +1,8 @@
 # Time Complexity: O(nlog(n))
+from typing import List
 
-def longest_increasing_subsequence(array: list[int]):
+
+def longest_increasing_subsequence(array: List[int]):
     """
     Given an array of size N, the task is to find the length 
     of the Longest Increasing Subsequence (LIS) i.e., the longest 
