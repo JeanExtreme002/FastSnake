@@ -1,7 +1,5 @@
 from fastsnake.algorithms.longest_increasing_subsequence import *
 
-import random
-
 
 def test_longest_increasing_subsequence():
     assert lis([]) == 0
