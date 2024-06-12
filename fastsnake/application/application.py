@@ -91,11 +91,11 @@ def load_codeforces_problems(contest_id: int, directory: str, namespace: str) ->
     return problems
 
 
-def start_atcoder_contest(contest_id: str) -> None:
+def start_atcoder_contest(contest_id: str, language: str = "py") -> None:
     """
     Initialize a AtCoder contest.
     """
-    directory = "atcoder_contest"
+    directory = "atcoder_contest_" + language
 
     solutions = os.path.join(directory, "solutions")
     test_cases = os.path.join(directory, "test_cases")
@@ -105,14 +105,14 @@ def start_atcoder_contest(contest_id: str) -> None:
         os.mkdir(directory)
 
     problems = load_atcoder_problems(contest_id, test_cases, namespace="contests")
-    start_contest(solutions, test_cases, test_generators, contest_id, problems)
+    start_contest(solutions, test_cases, test_generators, contest_id, problems, language=language)
 
 
-def start_codeforces_contest(contest_id: int) -> None:
+def start_codeforces_contest(contest_id: int, language: str = "py") -> None:
     """
     Initialize a Codeforces contest.
     """
-    directory = "codeforces_contest"
+    directory = "codeforces_contest_" + language
 
     solutions = os.path.join(directory, "solutions")
     test_cases = os.path.join(directory, "test_cases")
@@ -122,14 +122,14 @@ def start_codeforces_contest(contest_id: int) -> None:
         os.mkdir(directory)
 
     problems = load_codeforces_problems(contest_id, test_cases, namespace="contest")
-    start_contest(solutions, test_cases, test_generators, contest_id, problems)
+    start_contest(solutions, test_cases, test_generators, contest_id, problems, language=language)
 
 
-def start_codeforces_gym(gym_id: int) -> None:
+def start_codeforces_gym(gym_id: int, language: str = "py") -> None:
     """
     Initialize a Codeforces contest.
     """
-    directory = "codeforces_gym"
+    directory = "codeforces_gym_" + language
 
     solutions = os.path.join(directory, "solutions")
     test_cases = os.path.join(directory, "test_cases")
@@ -139,14 +139,14 @@ def start_codeforces_gym(gym_id: int) -> None:
         os.mkdir(directory)
 
     problems = load_codeforces_problems(gym_id, test_cases, namespace="gym")
-    start_contest(solutions, test_cases, test_generators, gym_id, problems)
+    start_contest(solutions, test_cases, test_generators, gym_id, problems, language=language)
 
 
-def start_custom_contest(n_problems: int) -> None:
+def start_custom_contest(n_problems: int, language: str = "py") -> None:
     """
     Initialize a custom contest.
     """
-    directory = "custom_contest"
+    directory = "custom_contest_" + language
     contest_id = "x"
 
     solutions = os.path.join(directory, "solutions")
@@ -174,7 +174,7 @@ def start_custom_contest(n_problems: int) -> None:
         with open(filename, "w") as file:
             file.write("\n")
 
-    start_contest(solutions, test_cases, test_generators, contest_id, problems)
+    start_contest(solutions, test_cases, test_generators, contest_id, problems, language=language)
 
 
 def main() -> None:
@@ -239,7 +239,8 @@ def main() -> None:
 
         # Start a custom contest.
         elif args.command == "start-custom-contest":
-            start_custom_contest(args.n_problems)
+            language = "py" if not args.language_cpp else "cpp"
+            start_custom_contest(args.n_problems, language=language)
 
         # Add a external module.
         elif args.command == "add-external":
@@ -251,6 +252,8 @@ def main() -> None:
 
         # Tools for AtCoder.
         elif args.command == "atcoder":
+            language = "py" if not args.language_cpp else "cpp"
+
             if args.load:
                 contest_id, problem = args.load[0], args.load[1]
                 load_atcoder_problem(contest_id, problem, args.save, namespace="contests")
@@ -259,10 +262,12 @@ def main() -> None:
                 load_atcoder_problems(args.load_all, args.save, namespace="contests")
 
             elif args.start_contest:
-                start_atcoder_contest(args.start_contest)
+                start_atcoder_contest(args.start_contest, language=language)
 
         # Tools for Codeforces.
         elif args.command == "codeforces":
+            language = "py" if not args.language_cpp else "cpp"
+            
             if args.load:
                 try: 
                     contest_id, problem = int(args.load[0]), args.load[1]
@@ -275,10 +280,10 @@ def main() -> None:
                 load_codeforces_problems(args.load_all, args.save, namespace="contest")
 
             elif args.start_contest:
-                start_codeforces_contest(args.start_contest)
+                start_codeforces_contest(args.start_contest, language=language)
 
             elif args.start_gym:
-                start_codeforces_gym(args.start_gym)
+                start_codeforces_gym(args.start_gym, language=language)
                 
 
 if __name__ == "__main__":

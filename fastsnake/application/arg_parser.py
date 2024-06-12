@@ -34,6 +34,7 @@ compile_parser.add_argument("filename", type=str, help="Python module")
 # Custom Contest.
 custom_contest_parser = command_parser.add_parser("start-custom-contest", help="Start a custom contest")
 custom_contest_parser.add_argument("n_problems", type=int, help="Amount of problems")
+custom_contest_parser.add_argument("-cpp", "--cpp", action="store_true", dest="language_cpp", help="Use C++ language for solutions")
 
 # Add External Module.
 add_external_contest_parser = command_parser.add_parser("add-external", help="Add an external module")
@@ -51,6 +52,7 @@ atcoder_parser.add_argument("--load-all", metavar="contest_id", type=str, dest="
 atcoder_parser.add_argument("--load", metavar=("contest_id", "problem"), type=str, nargs=2, dest="load", help="Download test cases from a problem")
 atcoder_parser.add_argument("--save", metavar="directory", type=str, default="atcoder", dest="save", help="Directory for saving downloaded files")
 atcoder_parser.add_argument("-sc", "--start-contest", metavar="contest_id", type=str, dest="start_contest", help="Initialize a Codeforces contest")
+atcoder_parser.add_argument("-cpp", "--cpp", action="store_true", dest="language_cpp", help="Use C++ language for solutions")
 
 # Tools for Contest Platforms.
 codeforces_parser = command_parser.add_parser("codeforces", help="Tools for Codeforces platform")
@@ -59,3 +61,4 @@ codeforces_parser.add_argument("--load", metavar=("contest_id", "problem"), type
 codeforces_parser.add_argument("--save", metavar="directory", type=str, default="codeforces", dest="save", help="Directory for saving downloaded files")
 codeforces_parser.add_argument("-sc", "--start-contest", metavar="contest_id", type=int, dest="start_contest", help="Initialize a Codeforces contest")
 codeforces_parser.add_argument("-sg", "--start-gym", metavar="gym_id", type=int, dest="start_gym", help="Initialize a Codeforces gym")
+codeforces_parser.add_argument("-cpp", "--cpp", action="store_true", dest="language_cpp", help="Use C++ language for solutions")

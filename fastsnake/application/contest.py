@@ -12,7 +12,8 @@ def start_contest(
     test_cases_namespace: str, 
     test_generators_namespace: str, 
     contest_id: int, 
-    problems: list[str]
+    problems: list[str],
+    language: str = "py"
 ) -> None:
     """
     Start a contest at the directory.
@@ -22,10 +23,11 @@ def start_contest(
         "test_cases_namespace": test_cases_namespace,
         "test_generators_namespace": test_generators_namespace,
         "contest_id": contest_id,
-        "problems": problems
+        "problems": problems,
+        "language": language
     }
 
-    # Create folder with Python modules for writting solutions.
+    # Create folder with <language> modules for writting solutions.
     if not os.path.exists(config["solutions_namespace"]):
         os.mkdir(config["solutions_namespace"])
 
@@ -38,10 +40,12 @@ def start_contest(
             os.remove(os.path.join(config["test_generators_namespace"], filename))
 
     for problem in config["problems"]:
-        with open(os.path.join(config["solutions_namespace"], problem.upper() + ".py"), "w") as file:
-            file.write("# Solution for problem " + problem + "\n\n")
+        with open(os.path.join(config["solutions_namespace"], problem.upper() + "." + language), "w") as file:
+            comment_char = "#" if language.lower() == "py" else "//"
 
-            with open(os.path.join(template_path, "solution.py")) as template_file:
+            file.write(comment_char + " Solution for problem " + problem + "\n\n")
+
+            with open(os.path.join(template_path, "solution." + language)) as template_file:
                 file.write(template_file.read())
 
             file.write("\n\n")
