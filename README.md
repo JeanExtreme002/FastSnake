@@ -104,6 +104,10 @@ By default, it analyzes the entire code, but you can set a starting point by add
 ```
 **Note:** The step counter only analyzes the code that has been required for testing. This means that if you don't compile your code before testing using the `--compile-before` flag, it won't consider fastsnake algorithms and structures.
 
+## Support for C++ Language
+You may use C++ language to solve contests by using the flag `--cpp` when starting a contest. 
+
+However, some features available in the Python language won't yet be available for C++. 
 
 ## More Information
 Use the following command for more information about FastSnake CLI:

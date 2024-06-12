@@ -1,3 +1,4 @@
+from fastsnake.application import runner_tools
 from fastsnake.application.config import contest_config_filename
 from fastsnake.util.compiler import compile_code
 from fastsnake.util.step_counter import inject_step_counter
@@ -12,6 +13,24 @@ import random
 import sys
 import subprocess
 import string
+
+def check_support_for_cpp(
+    step_counter: bool = False, 
+    step_counter_10: bool = False, 
+    compile_before: bool = False, 
+    compile_after: bool = False,
+    **kwargs
+) -> None:
+    """
+    Check if there is any runner option that is not supported for C++ solutions.
+    """
+    if step_counter or step_counter_10:
+        print("Step Counter is supported only by the Python language for now.")
+        quit()
+        
+    if compile_before or compile_after:
+        print("Compiler is supported only by the Python language for now.")
+        quit()     
 
 
 def compile(filename: str) -> None:
@@ -76,9 +95,25 @@ def run_test(
 
     if not problem in config["problems"]:
         raise ValueError(f"Invalid problem ID: {problem}")
+    
+    # Get the language.
+    language = config["language"]
+    is_python = language == "py"
+
+    if not is_python:
+        check_support_for_cpp(
+            step_counter=step_counter,
+            step_counter_10=step_counter_10,
+            compile_after=compile_after,
+            compile_before=compile_before,
+            sort_lines=sort_lines,
+            sort_elements=sort_elements,
+            case_insensitive=case_insensitive,
+            debug=debug
+        )
 
     # Get the source code.
-    module = os.path.join(config["solutions_namespace"], problem.upper() + ".py")
+    module = os.path.join(config["solutions_namespace"], problem.upper() + "." + language)
 
     if compile_before:
         module = compile(module)
@@ -104,6 +139,8 @@ def run_test(
         # Copy the module, injecting a code for loading input data.
         inject = f"import sys\nsys.stdin = open(r'{input_filename}', 'r')\n\n"
 
+        if not is_python: inject = ""
+
         with NamedTemporaryFile("w", delete=False) as temp_module:
             temp_module.write(inject + source_code)
 
@@ -114,24 +151,42 @@ def run_test(
             step_counter_variable = inject_step_counter(temp_module.name, temp_module.name)
 
         # Inject code to get a specific success code.
-        ascii_range = string.ascii_lowercase + string.ascii_uppercase
-        success_code = ":success_code" + "".join(random.choice(ascii_range) for _ in range(100)) + ":"
-
-        with open(temp_module.name, mode="a") as file:
-            file.write(f"print('{success_code}')\n")
+        success_code = runner_tools.inject_success_code(temp_module, language)
 
         # Print the name of the module that will be executed, if debug is True.
-        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_case}:", temp_module.name)
+        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_case}:", temp_module.name + (".cpp" if not is_python else ""))
 
         # Run the solution.
-        command = "python" if "win32" in sys.platform else "python3"
+        if is_python:
+            command = "python" if "win32" in sys.platform else "python3"
 
-        process = subprocess.Popen(
-            [command, temp_module.name], 
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.PIPE, 
-            shell=False,
-        )
+            process = subprocess.Popen(
+                [command, temp_module.name], 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE, 
+                shell=False,
+            )
+        else:
+            dirname = os.path.dirname(temp_module.name)
+            program = os.path.join(dirname, "program")
+
+            exec_module = os.path.splitext(temp_module.name)[0] + ".cpp"
+            os.rename(temp_module.name, exec_module)
+
+            if os.system(f"g++ -o {program} {exec_module}") != 0:
+                print("Erro de compilação.")
+                quit()
+            
+            process = subprocess.Popen(
+                [program, input_filename], 
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE, 
+                shell=False,
+            )
+            with open(input_filename) as file:
+                process.stdin.write(bytearray(file.read(), "utf-8"))
+        
         result, error = process.communicate()
 
         result = result.decode("utf-8").strip().strip("\n").replace("\r", "")
@@ -232,8 +287,24 @@ def run_test_generator(
     if not problem in config["problems"]:
         raise ValueError(f"Invalid problem ID: {problem}")
     
+    # Get the language.
+    language = config["language"]
+    is_python = language == "py"
+
+    if not is_python:
+        check_support_for_cpp(
+            step_counter=step_counter,
+            step_counter_10=step_counter_10,
+            compile_after=compile_after,
+            compile_before=compile_before,
+            sort_lines=sort_lines,
+            sort_elements=sort_elements,
+            case_insensitive=case_insensitive,
+            debug=debug
+        )
+
     # Get the source code.
-    module = os.path.join(config["solutions_namespace"], problem.upper() + ".py")
+    module = os.path.join(config["solutions_namespace"], problem.upper() + "." + language)
 
     if compile_before:
         module = compile(module)
@@ -272,6 +343,8 @@ def run_test_generator(
         # Copy the module, injecting a code for loading input data.
         inject = f"import sys\nsys.stdin = open(r'{input_filename}', 'r')\n\n"
 
+        if not is_python: inject = ""
+
         with NamedTemporaryFile("w", delete=False) as temp_module:
             temp_module.write(inject + source_code)
 
@@ -282,24 +355,42 @@ def run_test_generator(
             step_counter_variable = inject_step_counter(temp_module.name, temp_module.name)
 
         # Inject code to get a specific success code.
-        ascii_range = string.ascii_lowercase + string.ascii_uppercase
-        success_code = ":success_code" + "".join(random.choice(ascii_range) for _ in range(100)) + ":"
-
-        with open(temp_module.name, mode="a") as file:
-            file.write(f"print('{success_code}')\n")
+        success_code = runner_tools.inject_success_code(temp_module, language)
 
         # Print the name of the module that will be executed, if debug is True.
-        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_id}:", temp_module.name)
-
+        if debug: print(f"[DEBUG] Temp Module Path of Test #{test_id}:", temp_module.name + (".cpp" if not is_python else ""))
+        
         # Run the solution.
-        command = "python" if "win32" in sys.platform else "python3"
+        if is_python:
+            command = "python" if "win32" in sys.platform else "python3"
 
-        process = subprocess.Popen(
-            [command, temp_module.name], 
-            stdout=subprocess.PIPE, 
-            stderr=subprocess.PIPE, 
-            shell=False,
-        )
+            process = subprocess.Popen(
+                [command, temp_module.name], 
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE, 
+                shell=False,
+            )
+        else:
+            dirname = os.path.dirname(temp_module.name)
+            program = os.path.join(dirname, "program")
+
+            exec_module = os.path.splitext(temp_module.name)[0] + ".cpp"
+            os.rename(temp_module.name, exec_module)
+
+            if os.system(f"g++ -o {program} {exec_module}") != 0:
+                print("Erro de compilação.")
+                quit()
+            
+            process = subprocess.Popen(
+                [program, input_filename], 
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE, 
+                stderr=subprocess.PIPE, 
+                shell=False,
+            )
+            with open(input_filename) as file:
+                process.stdin.write(bytearray(file.read(), "utf-8"))
+                
         result, error = process.communicate()
 
         result = result.decode("utf-8").replace("\r", "").strip().strip("\n")
