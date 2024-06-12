@@ -7,7 +7,7 @@
 [![Python Version](https://img.shields.io/badge/python-3.7+-yellow)](https://pypi.org/project/FastSnake/)
 [![Downloads](https://static.pepy.tech/personalized-badge/fastsnake?period=total&units=international_system&left_color=grey&right_color=orange&left_text=downloads)](https://pypi.org/project/FastSnake/)
 
-Tired of having to copy and paste your code from your personal library into every solution you write? Or always having to copy and paste test cases from contests? FastSnake is a command-line tool that allows you to easily create, expand, run, and test Python solutions for competitive programming problems.
+Tired of having to copy and paste your code from your personal library into every solution you write? Or always having to copy and paste test cases from contests? FastSnake is a command-line tool that allows you to easily create, expand, run, and test Python / C++ solutions for competitive programming problems.
 
 This project provides useful CLI tools for competitive programming, such as test case generators, algorithms and data structures, tools for platforms Codeforces and AtCoder, and other features that assist you during the development and testing of solutions.
 
