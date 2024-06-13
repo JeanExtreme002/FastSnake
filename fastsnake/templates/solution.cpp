@@ -14,6 +14,8 @@
 #include <queue>
 #include <random>
 #include <set>
+#include <sstream>
+#include <string>
 #include <vector>
 
 using namespace std;
@@ -22,10 +24,12 @@ using namespace std;
 #define double long double
 #define float double
 
-#define endl '\n'                            // Speed up output with line break
+#define endl '\n'                                           // Speed up output with line break
 
-#define all(x) x.begin(), x.end()            // Example: sort(all(your_vector))
-#define reverse_all(x) x.rbegin(), x.rend()  // Example: sort(reverse_all(your_vector))
+#define all(x) x.begin(), x.end()                           // Example: sort(all(your_vector))
+#define all_reversed(x) x.rbegin(), x.rend()                // Example: sort(all_reversed(your_vector))
+
+#define ceil_div(a, b) floor((a + b - 1) / b)               // Example: ceil_div(10, 3) == 4
 
 void solve();
 
@@ -39,11 +43,54 @@ signed main() {
     return 0;
 }
 
-// const int mod = int(1e9) + 7; 
-const int mod = 998244353;
+vector<string> split(const string &str, char delimiter = ' ') {
+    vector<string> tokens;
+    string token;
+    stringstream ss(str);
 
-int lcm(int a, int b){
-    return a /__gcd(a, b) * b;
+    while (getline(ss, token, delimiter)) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
+
+template <typename T> vector<T> sub_vector(vector<T> vec, int start, int end, int step = 1) {
+    if (step == 0 || (step > 0 && start >= end) || (step < 0 && start <= end)) {
+        vector<T> v_empty(0);
+        return v_empty;
+    }
+
+    int size = floor((abs(end - start) + abs(step) - 1) / abs(step));
+
+    vector<T> c_vec(size);
+
+    for (int i = 0; i < size; i++) {
+        int index = start + (i * step);
+        c_vec[i] = vec[index];
+    }
+
+    return c_vec;
+}
+
+string sub_string(string str, int start, int end, int step = 1) {
+    if (step == 0 || (step > 0 && start >= end) || (step < 0 && start <= end)) {
+        string str_empty = "";
+        return str_empty;
+    }
+
+    int size = floor((abs(end - start) + abs(step) - 1) / abs(step));
+
+    char c_str[size + 1];
+
+    for (int i = 0; i < size; i++) {
+        int index = start + (i * step);
+        c_str[i] = str[index];
+    }
+
+    c_str[size] = '\0';
+    
+    string final_c_str(c_str);
+    return final_c_str;
 }
 
 // =============================================================================
@@ -53,7 +100,6 @@ template <typename T> vector<T> put_array(int n) {
     for (T &i: vec) {
         cin >> i;
     }
-
     return vec;
 }
 
@@ -68,7 +114,6 @@ template <typename T> vector<vector<T>> put_matrix(int rows, int columns) {
         }
         vec.push_back(vec2);
     }
-
     return vec;
 }
 
@@ -90,6 +135,12 @@ float putf() {
     return var;
 }
 // =============================================================================
+
+const int mod = 998244353; // int(1e9) + 7; 
+
+int lcm(int a, int b){
+    return a /__gcd(a, b) * b;
+}
 
 #define puta(n) put_array<int>(n)        // You may use any other type here.
 #define putm(n, m) put_matrix<int>(n, m) // You may use any other type here.
