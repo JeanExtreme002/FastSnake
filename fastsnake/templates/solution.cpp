@@ -43,6 +43,7 @@ signed main() {
     return 0;
 }
 
+// [String Functions]: ==========================================================
 vector<string> split(const string &str, char delimiter = ' ') {
     vector<string> tokens;
     string token;
@@ -54,7 +55,8 @@ vector<string> split(const string &str, char delimiter = ' ') {
     return tokens;
 }
 
-template <typename T> vector<T> sub_vector(vector<T> vec, int start, int end, int step = 1) {
+// [Slice Functions]: ==========================================================
+template <typename T> vector<T> slice(vector<T> vec, int start, int end, int step = 1) {
     if (step == 0 || (step > 0 && start >= end) || (step < 0 && start <= end)) {
         vector<T> v_empty(0);
         return v_empty;
@@ -72,7 +74,7 @@ template <typename T> vector<T> sub_vector(vector<T> vec, int start, int end, in
     return c_vec;
 }
 
-string sub_string(string str, int start, int end, int step = 1) {
+string slice(string str, int start, int end, int step = 1) {
     if (step == 0 || (step > 0 && start >= end) || (step < 0 && start <= end)) {
         string str_empty = "";
         return str_empty;
@@ -93,7 +95,32 @@ string sub_string(string str, int start, int end, int step = 1) {
     return final_c_str;
 }
 
-// =============================================================================
+// [Print Functions]: ==========================================================
+template <typename T> void println(T t) { cout << t << endl; }
+
+template <typename T, typename ... U> void println(T t, U ... u) {
+    cout << t << ' ';
+    println(u ...);
+}
+
+template <typename T> void println(vector<T> vec) {
+    for (int i = 0; i < vec.size() - 1; i++) {
+        cout << vec[i] << ' ';
+    }
+    if (vec.size() > 0) {
+        cout << vec[vec.size() - 1];
+    }
+    cout << endl;
+}
+
+template <typename T> void print(T t) { cout << t << endl; }
+
+template <typename T, typename ... U> void print(T t, U ... u) {
+    cout << t << ' ';
+    print(u ...);
+}
+
+// [Input Functions]: ==========================================================
 template <typename T> vector<T> put_array(int n) { 
     vector<T> vec(n);
 
