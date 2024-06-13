@@ -56,7 +56,7 @@ vector<string> split(const string &str, char delimiter = ' ') {
 }
 
 // [Slice Functions]: ==========================================================
-template <typename T> vector<T> slice(vector<T> vec, int start, int end, int step = 1) {
+template <typename T> vector<T> slice(vector<T> &vec, int start, int end, int step = 1) {
     if (step == 0 || (step > 0 && start >= end) || (step < 0 && start <= end)) {
         vector<T> v_empty(0);
         return v_empty;
@@ -74,7 +74,7 @@ template <typename T> vector<T> slice(vector<T> vec, int start, int end, int ste
     return c_vec;
 }
 
-string slice(string str, int start, int end, int step = 1) {
+string slice(string &str, int start, int end, int step = 1) {
     if (step == 0 || (step > 0 && start >= end) || (step < 0 && start <= end)) {
         string str_empty = "";
         return str_empty;
@@ -112,6 +112,22 @@ template <typename T> void println(vector<T> vec) {
     }
     cout << endl;
 }
+
+template <typename T> void println(set<T> s) {
+  set<int>::iterator itr;
+  int count = 0;
+    
+  for (itr = s.begin(); itr != s.end(); itr++) {
+    cout << *itr;
+
+    if (++count == s.size()) {
+        cout << endl;
+    }
+    else {
+        cout << ' ';
+    }
+  }
+}  
 
 void println() { cout << endl; }
 
