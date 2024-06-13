@@ -113,7 +113,9 @@ template <typename T> void println(vector<T> vec) {
     cout << endl;
 }
 
-template <typename T> void print(T t) { cout << t << endl; }
+void println() { cout << endl; }
+
+template <typename T> void print(T t) { cout << t; }
 
 template <typename T, typename ... U> void print(T t, U ... u) {
     cout << t << ' ';
