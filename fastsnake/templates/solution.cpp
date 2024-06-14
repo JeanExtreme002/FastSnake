@@ -24,12 +24,13 @@ using namespace std;
 #define double long double
 #define float double
 
-#define endl '\n'                                           // Speed up output with line break
+#define endl '\n'                                                     // Speed up output with line break
 
-#define all(x) x.begin(), x.end()                           // Example: sort(all(your_vector))
-#define all_reversed(x) x.rbegin(), x.rend()                // Example: sort(all_reversed(your_vector))
+#define all(x) x.begin(), x.end()                                     // Example: sort(all(your_vector))
+#define all_reversed(x) x.rbegin(), x.rend()                          // Example: sort(all_reversed(your_vector))
 
-#define ceil_div(a, b) floor((a + b - 1) / b)               // Example: ceil_div(10, 3) == 4
+#define ceil_div(a, b) floor((a+b-1) / b)                             // Example: ceil_div(10, 3) == 4
+#define array_to_vector(type, array) vector<type>(array, *(&array+1)) // Example: vector<int> v = array_to_vector(int, a);
 
 void solve();
 
@@ -138,6 +139,37 @@ string slice(string &str, int start, int end, int step = 1) {
     
     string final_c_str(c_str);
     return final_c_str;
+}
+
+// [Search Functions]: ==========================================================
+template <class T, class V> int lower_bound(vector<T> &vec, const V &value) {
+    int index = distance(vec.begin(), lower_bound(vec.begin(), vec.end(), value));
+    return index < vec.size() ? index : -1;
+}
+
+template <class T, class V> int upper_bound(vector<T> &vec, const V &value) {
+    int index = distance(vec.begin(), upper_bound(vec.begin(), vec.end(), value));
+    return index - 1;
+}
+
+template <class T, class V> int binary_search(vector<T> arr, V x) {
+    int low = 0;
+    int high = arr.size();
+    
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+
+        if (arr[mid] == x) {
+            return mid;
+        }
+        if (arr[mid] < x) {
+            low = mid + 1;
+        }
+        else {
+            high = mid - 1;
+        }
+    }
+    return -1;
 }
 
 // [Print Functions]: ==========================================================
