@@ -55,6 +55,40 @@ vector<string> split(const string &str, char delimiter = ' ') {
     return tokens;
 }
 
+string toLowerCase(string &str) {
+    char new_str[str.length() + 1];
+
+    for (int i = 0; i < str.length(); i++) {
+        new_str[i] = tolower(str[i]);
+    }
+
+    new_str[str.length()] = '\0';
+    return string(new_str);
+}
+
+string toUpperCase(string &str) {
+    char new_str[str.length() + 1];
+
+    for (int i = 0; i < str.length(); i++) {
+        new_str[i] = toupper(str[i]);
+    }
+
+    new_str[str.length()] = '\0';
+    return string(new_str);
+}
+    
+string replace_str(string str, string sub_string, string new_string, int n = -1) {
+    while (n--) {
+        int pos = str.find(sub_string);
+
+        if (pos < 0) {
+            break;
+        }
+        str = str.replace(pos, sub_string.size(), new_string);
+    }
+    return str;
+}
+
 // [Slice Functions]: ==========================================================
 template <typename T> vector<T> slice(vector<T> &vec, int start, int end, int step = 1) {
     if (step == 0 || (step > 0 && start >= end) || (step < 0 && start <= end)) {
@@ -185,6 +219,11 @@ const int mod = 998244353; // int(1e9) + 7;
 
 int lcm(int a, int b){
     return a /__gcd(a, b) * b;
+}
+
+bool compare(int a, int b) {
+    // Edit this function as needed.
+    return a < b;
 }
 
 #define puta(n) put_array<int>(n)        // You may use any other type here.
