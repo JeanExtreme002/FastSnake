@@ -55,7 +55,7 @@ vector<string> split(const string &str, char delimiter = ' ') {
     return tokens;
 }
 
-string toLowerCase(string &str) {
+string to_lower(string &str) {
     char new_str[str.length() + 1];
 
     for (int i = 0; i < str.length(); i++) {
@@ -66,7 +66,7 @@ string toLowerCase(string &str) {
     return string(new_str);
 }
 
-string toUpperCase(string &str) {
+string to_upper(string &str) {
     char new_str[str.length() + 1];
 
     for (int i = 0; i < str.length(); i++) {
@@ -76,7 +76,7 @@ string toUpperCase(string &str) {
     new_str[str.length()] = '\0';
     return string(new_str);
 }
-    
+
 string replace_str(string str, string sub_string, string new_string, int n = -1) {
     while (n--) {
         int pos = str.find(sub_string);
@@ -87,6 +87,17 @@ string replace_str(string str, string sub_string, string new_string, int n = -1)
         str = str.replace(pos, sub_string.size(), new_string);
     }
     return str;
+}
+
+int count_str(string &str, string target) {
+   int occurrences = 0;
+   string::size_type pos = 0;
+    
+   while ((pos = str.find(target, pos )) != string::npos) {
+          occurrences += 1;
+          pos += target.length();
+   }
+   return occurrences;
 }
 
 // [Slice Functions]: ==========================================================
