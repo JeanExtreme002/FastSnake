@@ -8,6 +8,7 @@
 #include <functional>
 #include <iomanip>
 #include <iostream>
+#include <limits>
 #include <list>
 #include <map>
 #include <numeric>
@@ -31,6 +32,8 @@ using namespace std;
 
 #define ceil_div(a, b) floor((a+b-1) / b)                             // Example: ceil_div(10, 3) == 4
 #define array_to_vector(type, array) vector<type>(array, *(&array+1)) // Example: vector<int> v = array_to_vector(int, a);
+
+float inf = numeric_limits<float>::infinity();
 
 void solve();
 
@@ -152,17 +155,17 @@ template <class T, class V> int upper_bound(vector<T> &vec, const V &value) {
     return index - 1;
 }
 
-template <class T, class V> int binary_search(vector<T> arr, V x) {
+template <class T, class V> int binary_search(vector<T> &vec, const V &x) {
     int low = 0;
-    int high = arr.size();
+    int high = vec.size();
     
     while (low <= high) {
         int mid = low + (high - low) / 2;
 
-        if (arr[mid] == x) {
+        if (vec[mid] == x) {
             return mid;
         }
-        if (arr[mid] < x) {
+        if (vec[mid] < x) {
             low = mid + 1;
         }
         else {
@@ -170,6 +173,18 @@ template <class T, class V> int binary_search(vector<T> arr, V x) {
         }
     }
     return -1;
+}
+
+template <class T, class U, class V> bool contains(map<T, U> &dict, const V &v) {
+    return dict.find(v) != dict.end();
+}
+
+template <class T, class V> bool contains(vector<T> &vec, const V &v) {
+    return find(vec.begin(), vec.end(), v) != vec.end();
+}
+
+template <class T, class V> bool contains(set<T> &s, const V &v) {
+    return s.find(v) != s.end();
 }
 
 // [Print Functions]: ==========================================================
@@ -180,7 +195,23 @@ template <typename T, typename ... U> void println(T t, U ... u) {
     println(u ...);
 }
 
-template <typename T> void println(vector<T> vec) {
+template <typename T, typename U> void println(map<T, U> &m) {
+  int count = 0;
+
+  cout << "{";
+
+  for (auto itr = m.begin(); itr != m.end(); itr++) {
+    cout << itr->first << ": " << itr->second;
+
+    if (++count == m.size()) {
+      cout << "}" << endl;
+    } else {
+      cout << ", ";
+    }
+  }
+}
+
+template <typename T> void println(vector<T> &vec) {
     for (int i = 0; i < vec.size() - 1; i++) {
         cout << vec[i] << ' ';
     }
@@ -190,7 +221,7 @@ template <typename T> void println(vector<T> vec) {
     cout << endl;
 }
 
-template <typename T> void println(set<T> s) {
+template <typename T> void println(set<T> &s) {
   set<int>::iterator itr;
   int count = 0;
     
